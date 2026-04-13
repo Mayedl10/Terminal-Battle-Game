@@ -5,7 +5,11 @@
 #include "Item.hpp"
 
 enum TileType : uint8_t {
-    TT_Invalid
+    TT_Invalid,         // ?
+    TT_Wall,            // #
+    TT_Hole,            // O
+    TT_Regular,         // ./! if an item is on this tile
+    TT_CharacterSpawn   // @/.
 };
 
 struct Tile {
