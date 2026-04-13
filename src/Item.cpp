@@ -3,3 +3,7 @@
 #include <cstdint>
 
 #include "Character.hpp"
+
+void Item::useOnCharacter(ItemType type, Character *ch) {
+    // TODO
+}

@@ -17,7 +17,7 @@ public:
     void runGameCycle();
 
     int getLevelIdx();
-    void setLevelIdx();
+    void setLevelIdx(int idx);
 
     /*
     * levelFolderPath ... path to a folder that contains the levels

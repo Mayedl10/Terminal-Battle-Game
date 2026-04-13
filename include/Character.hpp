@@ -10,6 +10,7 @@ class Character {
     ItemType heldItem;
     CharacterClass charClass;
     char name;
+    int xpos, ypos;
 
     int speed;
     int range;
@@ -20,19 +21,25 @@ class Character {
 public:
 
     int getSpeed();
-    void setSpeed();
+    void setSpeed(int newSpeed);
 
     int getRange();
-    void setRange();
+    void setRange(int newRange);
 
     float getStrength();
-    void setStrength();
+    void setStrength(float newStrength);
 
     float getDefense();
-    void setDefense();
+    void setDefense(float newDefense);
     
     float getHealth();
-    void setHealth();
+    void setHealth(float newHealth);
+
+    int getXpos();
+    void setXpos(int newXpos);
+
+    int getYpos();
+    void setYpos(int newYpos);
 
     Character(char name, CharacterClass charClass);
 };

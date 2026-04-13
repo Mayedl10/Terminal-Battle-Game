@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 #include "Tile.hpp"
 #include "Game.hpp"
@@ -14,5 +15,5 @@ public:
 
     void displayLevel(Game *game);
 
-    Level();
+    Level(std::string levelFilePath);
 };
