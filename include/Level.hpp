@@ -10,6 +10,8 @@ class Level {
 
 public:
 
+    std::vector<std::vector<Tile>>& getMap();
+
     void displayLevel(Game *game);
 
     Level();
