@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include "Character.hpp"
+class Character;
 
 enum ItemType : uint8_t {
     IT_Invalid,

@@ -1,9 +1,8 @@
-#include "Game.hpp"
-
 #include <vector>
 #include <string>
 #include <queue>
 
+#include "Game.hpp"
 #include "Character.hpp"
 #include "Level.hpp"
 

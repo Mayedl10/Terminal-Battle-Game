@@ -4,7 +4,8 @@
 #include <string>
 
 #include "Tile.hpp"
-#include "Game.hpp"
+
+class Game;
 
 class Level {
     std::vector<std::vector<Tile>> map;
