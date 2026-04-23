@@ -13,8 +13,14 @@ enum TileType : uint8_t {
 };
 
 struct Tile {
-    int xpos, ypos;
     TileType type;
     bool blocksProjectiles, blocksMovement;
     ItemType item;  // IT_None if no item is on tile
+    
+    Tile(TileType type, bool blocksProjectiles, bool blocksMovement, ItemType item) :
+        type{type},
+        blocksProjectiles{blocksProjectiles},
+        blocksMovement{blocksMovement},
+        item{item}
+    {}
 };

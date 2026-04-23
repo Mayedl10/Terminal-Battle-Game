@@ -1,6 +1,10 @@
 #include <iostream>
 
+#include "Level.hpp"
+
 int main(int argc, char **argv) {
-    std::cout << "Hi" << std::endl;
+
+    Level l{"./data/levels/default_5p_5x5.dat"};
+    l.displayLevel(nullptr);
 
 }
