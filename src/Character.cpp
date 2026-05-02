@@ -62,6 +62,8 @@ Character::Character(char name, CharacterClass charClass) {
     this->name = name;
     this->charClass = charClass;
 
+    heldItem = ItemType::IT_None;
+
     // TODO: set more values based on class
     // TODO: initialise members
 }

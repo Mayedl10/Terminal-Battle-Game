@@ -2,14 +2,16 @@
 
 #include <vector>
 #include <string>
-#include <queue>
+#include <deque>
+#include <string_view>
+#include <memory>
 
 #include "Character.hpp"
 #include "Level.hpp"
 
 class Game {
-    std::queue<Character*> characters;
-    std::vector<Level*> levels;
+    std::deque<std::unique_ptr<Character>> characters;
+    std::vector<std::unique_ptr<Level>> levels;
     int levelIdx;   // index for current level
 
 public:

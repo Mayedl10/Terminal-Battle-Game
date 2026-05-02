@@ -1,15 +1,17 @@
 #pragma once
 
-#include <cstdint>
-
 #include "Item.hpp"
 
-enum TileType : uint8_t {
-    TT_Invalid,         // ?
-    TT_Wall,            // #
-    TT_Hole,            // O
-    TT_Regular,         // ./! if an item is on this tile
-    TT_CharacterSpawn   // @/.
+// enum has two uses:
+// - a Tile stores its own type using these
+// - this enum stores what tile is associated with which symbol (with exceptions) 
+enum TileType : char {
+    TT_Invalid          = '?',
+    TT_Wall             = '#',
+    TT_Hole             = 'O',
+    TT_Regular          = '.',
+    TT_CharacterSpawn   = '@',
+    TT_VISUAL_HasItem   = '!'   // no tile should actually have this
 };
 
 struct Tile {

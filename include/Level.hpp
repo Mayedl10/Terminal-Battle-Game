@@ -5,6 +5,8 @@
 
 #include "Tile.hpp"
 
+constexpr std::string_view levelFileExtension = ".dat";
+
 class Game;
 
 class Level {

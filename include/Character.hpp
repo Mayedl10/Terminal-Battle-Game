@@ -3,7 +3,11 @@
 #include "Item.hpp"
 
 enum CharacterClass {
-    CC_Invalid
+    CC_Invalid,
+    CC_Fighter,
+    CC_Ranger,
+    CC_Mage,
+    CC_Rogue
 };
 
 class Character {
