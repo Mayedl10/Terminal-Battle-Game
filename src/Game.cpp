@@ -38,10 +38,17 @@ Game::Game(std::string levelFolderPath) {
     }
     
 
-
+    
     // initialise levels
     for (const auto& levelFile: files) {
-        levels.push_back(std::make_unique<Level>(levelFile));
+        try {
+            levels.push_back(std::make_unique<Level>(levelFile));
+        }
+        catch(const std::exception& e) {
+            std::cerr << "An exception occurred while trying to load level: " << levelFile << "\n"
+            << e.what() << std::endl;;
+            throw;
+        } 
     }
 
     for (const auto& level: levels) {
