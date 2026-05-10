@@ -5,6 +5,8 @@
 #include <string>
 #include <memory>
 #include <deque>
+#include <utility>
+#include <algorithm>
 
 #include "Item.hpp"
 #include "Tile.hpp"
@@ -21,43 +23,63 @@ int Level::getMaxSupportedCharacters() {
 
 // TODO: display players
 void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
-    for (auto row: map) {
-        for (Tile& t: row) {
-            if (t.item != ItemType::IT_None) {
-                std::cout << TileType::TT_VISUAL_HasItem;
-                continue;
+
+    std::vector<std::pair<int, int>> playerPositions;
+
+
+    for (int i = 0; i < map.size(); i++) {
+        auto row = map[i];
+        for (int j = 0; j < row.size(); j++) {
+            auto& t = row[j];
+
+            int playerIdx = -1;
+            for (int k = 0; k < players.size(); k++) {
+                if (players[k]->getXpos() == i && players[k]->getYpos() == j) {
+                    playerIdx = k;
+                }
             }
 
-            switch (t.type) {
-            case (TileType::TT_CharacterSpawn):
-                std::cout << TileType::TT_Regular;
-                break;
+            if (playerIdx >= 0) {
+                // there is a player on this field
+                std::cout << players[playerIdx]->getName();
 
-            case (TileType::TT_Regular):
-                std::cout << TileType::TT_Regular;
-                break;
-
-            case (TileType::TT_Hole):
-                std::cout << TileType::TT_Hole;
-                break;
-
-            case (TileType::TT_Wall):
-                std::cout << TileType::TT_Wall;
-                break;
-
-            case (TileType::TT_Invalid):
-                std::cout << TileType::TT_Invalid;
-                break;
+            } else if (t.item != ItemType::IT_None) {
+                // there is an item on this field
+                std::cout << TileType::TT_VISUAL_HasItem;
             
-            default:
-                // if an invalid tile is found, print invalid '?' and the actual stored tile type
-                // this should not happen anyway, and i should probably throw an exception instead,
-                // but this is "good enough" and doesn't cause the program to potentially crash.
-                // plus, i will definitely notice if the grid looks off
-                std::cout << TileType::TT_Invalid
-                << t.type
-                << TileType::TT_Invalid;
-                break;
+            } else {
+
+                switch (t.type) {
+                case (TileType::TT_CharacterSpawn):
+                    std::cout << TileType::TT_Regular;
+                    break;
+
+                case (TileType::TT_Regular):
+                    std::cout << TileType::TT_Regular;
+                    break;
+
+                case (TileType::TT_Hole):
+                    std::cout << TileType::TT_Hole;
+                    break;
+
+                case (TileType::TT_Wall):
+                    std::cout << TileType::TT_Wall;
+                    break;
+
+                case (TileType::TT_Invalid):
+                    std::cout << TileType::TT_Invalid;
+                    break;
+                
+                default:
+                    // if an invalid tile is found, print invalid '?' and the actual stored tile type
+                    // this should not happen anyway, and i should probably throw an exception instead,
+                    // but this is "good enough" and doesn't cause the program to potentially crash.
+                    // plus, i will definitely notice if the grid looks off
+                    std::cout << TileType::TT_Invalid
+                    << t.type
+                    << TileType::TT_Invalid;
+                    break;
+                }
             }
             std::cout << ' ';
         }

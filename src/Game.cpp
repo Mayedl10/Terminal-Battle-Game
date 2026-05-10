@@ -123,7 +123,7 @@ void Game::placePlayers() {
         }
     }
 
-    // minimum number of spawns doesn't need to be checked here because it's already guaranteed by Game::selectRandomLevel
+    // minimum number of spawn points doesn't need to be checked here because it's already guaranteed by Game::selectRandomLevel
 
     // shuffle valid positions
     std::shuffle(validPositions.begin(), validPositions.end(), getRNG());
@@ -146,13 +146,7 @@ Game::Game(const std::string& levelFolderPath, const int characterCount, const i
     selectRandomLevel();
     placePlayers();
 
-    for (const auto& level: levels) {
-        level->displayLevel(characters);
-    }
-
-    for (const auto& ch: characters) {
-        std::cout << ch->getXpos() << " " << ch->getYpos() << " " << ch->isHuman() << std::endl;
-    }
+    levels[getLevelIdx()]->displayLevel(characters);
 }
 
 Game::~Game() {

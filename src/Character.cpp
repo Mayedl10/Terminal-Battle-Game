@@ -2,6 +2,8 @@
 #include "Item.hpp"
 #include "Classes.hpp"
 
+#include <cctype>
+
 int Character::getSpeed() {
     return attributes.speed;
 }
@@ -64,6 +66,15 @@ bool Character::isHuman() {
 
 void Character::setIsHuman(bool isHuman) {
     this->isHumanPlayer = isHuman;
+}
+
+char Character::getName() {
+    if (this->isHuman()) {
+        return this->name;
+    } else {
+        // return lowercase name if character isnt human
+        return (char)(std::tolower(this->name));
+    }
 }
 
 void Character::setClassAttributes() {

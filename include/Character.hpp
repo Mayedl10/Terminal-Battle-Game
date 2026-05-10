@@ -42,6 +42,8 @@ public:
         CharacterClass::CC_Rogue
     };
 
+    char getName();
+
     int getSpeed();
     void setSpeed(int newSpeed);
 
