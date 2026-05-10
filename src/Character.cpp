@@ -95,5 +95,5 @@ Character::Character(char name, CharacterClass charClass, bool isHuman) {
 
     setClassAttributes();
     
-    // TODO: initialise members
+    // let Game object set positions
 }

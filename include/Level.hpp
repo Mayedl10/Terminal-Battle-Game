@@ -14,10 +14,12 @@ class Game;
 
 class Level {
     std::vector<std::vector<Tile>> map;
+    int maxSupportedCharacters;
 
 public:
 
     std::vector<std::vector<Tile>>& getMap();
+    int getMaxSupportedCharacters();
 
     void displayLevel(std::deque<std::unique_ptr<Character>>& players);
 

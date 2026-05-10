@@ -15,6 +15,9 @@ std::vector<std::vector<Tile>>& Level::getMap() {
     return map;
 }
 
+int Level::getMaxSupportedCharacters() {
+    return maxSupportedCharacters;
+}
 
 // TODO: display players
 void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
@@ -65,11 +68,13 @@ void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
 Level::Level(std::string levelFilePath) {
     std::string levelData = FileHandler::read_file(levelFilePath);
     map = {{}};
+    maxSupportedCharacters = 0;
 
     for (char c: levelData) {
         switch (c) {
         // player spawnpoint
         case TileType::TT_CharacterSpawn:
+            maxSupportedCharacters++;
             map.back().push_back({TileType::TT_CharacterSpawn, false, false, ItemType::IT_None});
             break;
 
@@ -102,4 +107,5 @@ Level::Level(std::string levelFilePath) {
             break;
         }
     }
+
 }

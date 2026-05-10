@@ -18,6 +18,8 @@ class Game {
 
     void loadLevels(const std::string& levelFolderPath);
     void loadPlayers(const int characterCount, const int humanCharacterCount);
+    void selectRandomLevel();
+    void placePlayers();
 
 public:
 

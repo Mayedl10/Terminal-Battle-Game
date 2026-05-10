@@ -4,11 +4,14 @@
 #include <filesystem>
 #include <iostream>
 #include <chrono>
+#include <algorithm>
+#include <utility>
 
 #include "Game.hpp"
 #include "Character.hpp"
 #include "Level.hpp"
 #include "Classes.hpp"
+#include "Tile.hpp"
 
 void Game::runGameCycle() {
 
@@ -83,20 +86,53 @@ void Game::loadPlayers(const int characterCount, const int AIcharacterCount) {
             // this is an AI
             characters.push_back(std::make_unique<Character>(
                 nameCounter++,  // increment player counter
-                Character::validClasses[classDistribution(rng)],    // random class, very hacky solution
-                true
+                Character::validClasses[classDistribution(getRNG())],    // random class, very hacky solution
+                false
             ));
         }
 
-        characters.push_back(std::make_unique<Character>(
-            nameCounter++,  // increment player counter
-            CharacterClass::CC_Invalid,
-            (i >= AIcharacterCount)
-        ));
+    }
+}
+
+void Game::selectRandomLevel() {
+    // unloads all levels that don't support enough players!
+    // looping backwards to avoid shifting indexes
+    for (int i = levels.size()-1; i >= 0; i--) {
+        if (levels[i]->getMaxSupportedCharacters() < characters.size()) {
+            levels.erase(levels.begin() + i);
+        }
     }
 
+    if (levels.size() <= 0) {
+        throw std::runtime_error("Game::selectRandomLevel: no provided level can hold enough characters");
+    }
 
+    std::uniform_int_distribution<int> classDistribution(0, levels.size()-1);
+    this->setLevelIdx(classDistribution(getRNG()));
+}
 
+void Game::placePlayers() {
+    std::vector<std::pair<int, int>> validPositions;
+    auto& map = levels[getLevelIdx()]->getMap();
+
+    for (int i = 0; i < map.size(); i++) {
+        for (int j = 0; j < map[i].size(); j++) {
+            if (map[i][j].type == TileType::TT_CharacterSpawn) {
+                validPositions.push_back({i, j});
+            }
+        }
+    }
+
+    // minimum number of spawns doesn't need to be checked here because it's already guaranteed by Game::selectRandomLevel
+
+    // shuffle valid positions
+    std::shuffle(validPositions.begin(), validPositions.end(), getRNG());
+
+    // in (shuffled) order, assign character positions
+    for (int i = 0; i < characters.size(); i++) {
+        characters[i]->setXpos(validPositions[i].first);
+        characters[i]->setYpos(validPositions[i].second);
+    }
 }
 
 Game::Game(const std::string& levelFolderPath, const int characterCount, const int humanCharacterCount) {
@@ -107,8 +143,15 @@ Game::Game(const std::string& levelFolderPath, const int characterCount, const i
     loadLevels(levelFolderPath);
     loadPlayers(characterCount, humanCharacterCount);
 
+    selectRandomLevel();
+    placePlayers();
+
     for (const auto& level: levels) {
         level->displayLevel(characters);
+    }
+
+    for (const auto& ch: characters) {
+        std::cout << ch->getXpos() << " " << ch->getYpos() << " " << ch->isHuman() << std::endl;
     }
 }
 
