@@ -1,6 +1,18 @@
 #pragma once
 
+#include <array>
+
 #include "Item.hpp"
+
+struct CharacterAttributes {
+    int speed;
+    int range;
+    float strength;
+    float defense;  // gets multiplied with damage; range 0.0f~1.0f
+    float health;   // range 0.0f~100.0f
+    bool hasMagic;
+};
+
 
 enum CharacterClass {
     CC_Invalid,
@@ -15,14 +27,20 @@ class Character {
     CharacterClass charClass;
     char name;
     int xpos, ypos;
+    bool isHumanPlayer;
 
-    int speed;
-    int range;
-    float strength;
-    float defense;  // gets multiplied with damage; range 0.0f~1.0f
-    float health;   // range 0.0f~100.0f
+    CharacterAttributes attributes;
+
+    void setClassAttributes();
 
 public:
+
+    static inline const std::array<CharacterClass, 4> validClasses = {
+        CharacterClass::CC_Fighter,
+        CharacterClass::CC_Mage,
+        CharacterClass::CC_Ranger,
+        CharacterClass::CC_Rogue
+    };
 
     int getSpeed();
     void setSpeed(int newSpeed);
@@ -45,5 +63,8 @@ public:
     int getYpos();
     void setYpos(int newYpos);
 
-    Character(char name, CharacterClass charClass);
+    bool isHuman();
+    void setIsHuman(bool isHuman);
+
+    Character(char name, CharacterClass charClass, bool isHuman);
 };

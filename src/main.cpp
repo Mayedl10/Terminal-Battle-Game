@@ -5,7 +5,7 @@
 
 int main(int argc, char **argv) {
 
-    Game test("./data/levels/");
+    Game test("./data/levels/", 5, 3);
     
 
 }

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <memory>
+#include <deque>
 
 #include "Item.hpp"
 #include "Tile.hpp"
@@ -15,7 +17,7 @@ std::vector<std::vector<Tile>>& Level::getMap() {
 
 
 // TODO: display players
-void Level::displayLevel(Game *game) {
+void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
     for (auto row: map) {
         for (Tile& t: row) {
             if (t.item != ItemType::IT_None) {

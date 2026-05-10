@@ -1,45 +1,45 @@
 #include "Character.hpp"
-
 #include "Item.hpp"
+#include "Classes.hpp"
 
 int Character::getSpeed() {
-    return speed;
+    return attributes.speed;
 }
 
 void Character::setSpeed(int newSpeed) {
-    speed = newSpeed;
+    attributes.speed = newSpeed;
 }
 
 int Character::getRange() {
-    return range;
+    return attributes.range;
 }
 
 void Character::setRange(int newRange) {
-    range = newRange;
+    attributes.range = newRange;
 }
 
 float Character::getStrength() {
-    return strength;
+    return attributes.strength;
 }
 
 void Character::setStrength(float newStrength) {
-    strength = newStrength;
+    attributes.strength = newStrength;
 }
 
 float Character::getDefense() {
-    return defense;
+    return attributes.defense;
 }
 
 void Character::setDefense(float newDefense) {
-    defense = newDefense;
+    attributes.defense = newDefense;
 }
 
 float Character::getHealth() {
-    return health;
+    return attributes.health;
 }
 
 void Character::setHealth(float newHealth) {
-    health = newHealth;
+    attributes.health = newHealth;
 }
 
 int Character::getXpos() {
@@ -58,12 +58,42 @@ void Character::setYpos(int newYpos) {
     ypos = newYpos;
 }
 
-Character::Character(char name, CharacterClass charClass) {
+bool Character::isHuman() {
+    return this->isHumanPlayer;
+}
+
+void Character::setIsHuman(bool isHuman) {
+    this->isHumanPlayer = isHuman;
+}
+
+void Character::setClassAttributes() {
+    switch (this->charClass) {
+    case CharacterClass::CC_Fighter:
+        this->attributes = CharacterClasses::fighterAttr;
+        break;
+    case CharacterClass::CC_Mage:
+        this->attributes = CharacterClasses::mageAttr;
+        break;
+    case CharacterClass::CC_Rogue:
+        this->attributes = CharacterClasses::rogueAttr;
+        break;
+    case CharacterClass::CC_Ranger:
+        this->attributes = CharacterClasses::rangerAttr;
+        break;
+    default:
+        this->attributes = CharacterClasses::invalidAttr;
+        break;
+    }
+}
+
+Character::Character(char name, CharacterClass charClass, bool isHuman) {
     this->name = name;
     this->charClass = charClass;
+    setIsHuman(isHuman);
 
     heldItem = ItemType::IT_None;
 
-    // TODO: set more values based on class
+    setClassAttributes();
+    
     // TODO: initialise members
 }
