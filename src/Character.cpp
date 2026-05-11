@@ -11,7 +11,7 @@ void Character::setQueryObject(InputQuery& qu) {
 
 // matching InputQuery constructor
 void Character::setQueryObject(std::vector<std::pair<std::string, bool>>&& opts) {
-    queryObject = InputQuery(opts);
+    queryObject = InputQuery(std::move(opts));  // std::move because of lvalue / rvalue stuff
 }
 
 InputQuery& Character::getQueryObject() {

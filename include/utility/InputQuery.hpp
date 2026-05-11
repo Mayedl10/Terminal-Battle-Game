@@ -15,6 +15,6 @@ public:
     void setVisibility(int index, bool isVisible);
     bool isVisible(int index);
 
-    InputQuery(std::vector<std::pair<std::string, bool>>& opts);
+    InputQuery(std::vector<std::pair<std::string, bool>>&& opts);
     InputQuery(); // no-arg constructor
 };

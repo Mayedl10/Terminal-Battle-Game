@@ -12,6 +12,7 @@
 #include "Level.hpp"
 #include "Classes.hpp"
 #include "Tile.hpp"
+#include "InputQuery.hpp"
 
 // returns false if the game is over
 bool Game::runGameCycle() {
@@ -88,6 +89,13 @@ void Game::loadPlayers(const int characterCount, const int AIcharacterCount) {
 
     char nameCounter = 'A';
     std::uniform_int_distribution<int> classDistribution(0, 3);
+
+    InputQuery classQuery = InputQuery({
+        {"Fighter", true},
+        {"Sorcere", true},
+        {"Rogue", true},
+        {"Ranger", true}
+    });
 
     for (int i = 0; i < characterCount; i++) {
         if (i >= AIcharacterCount) {
