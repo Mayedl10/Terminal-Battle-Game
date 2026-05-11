@@ -1,3 +1,6 @@
+# build using: make -j$(nproc)
+# makefile generated using ChatGPT
+
 # Compiler
 CXX := g++
 
@@ -37,5 +40,3 @@ clean:
 re: clean all
 
 .PHONY: all clean re
-
-# build using: make -j$(nproc)
