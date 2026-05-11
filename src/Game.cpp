@@ -141,7 +141,7 @@ void Game::selectRandomLevel() {
     // unloads all levels that don't support enough players!
     // looping backwards to avoid shifting indexes
     for (int i = levels.size()-1; i >= 0; i--) {
-        if (levels[i]->getMaxSupportedCharacters() < characters.size()) {
+        if (levels[i]->getMaxSupportedCharacters() < static_cast<int>(characters.size())) {
             levels.erase(levels.begin() + i);
         }
     }
@@ -158,8 +158,8 @@ void Game::placePlayers() {
     std::vector<std::pair<int, int>> validPositions;
     auto& map = levels[getLevelIdx()]->getMap();
 
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[i].size(); j++) {
+    for (int i = 0; i < static_cast<int>(map.size()); i++) {
+        for (int j = 0; j < static_cast<int>(map[i].size()); j++) {
             if (map[i][j].type == TileType::TT_CharacterSpawn) {
                 validPositions.push_back({i, j});
             }
@@ -172,7 +172,7 @@ void Game::placePlayers() {
     std::shuffle(validPositions.begin(), validPositions.end(), getRNG());
 
     // in (shuffled) order, assign character positions
-    for (int i = 0; i < characters.size(); i++) {
+    for (int i = 0; i < static_cast<int>(characters.size()); i++) {
         characters[i]->setXpos(validPositions[i].first);
         characters[i]->setYpos(validPositions[i].second);
     }

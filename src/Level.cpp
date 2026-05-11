@@ -27,13 +27,13 @@ void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
     std::vector<std::pair<int, int>> playerPositions;
 
 
-    for (int i = 0; i < map.size(); i++) {
+    for (int i = 0; i < static_cast<int>(map.size()); i++) {
         auto row = map[i];
-        for (int j = 0; j < row.size(); j++) {
+        for (int j = 0; j < static_cast<int>(row.size()); j++) {
             auto& t = row[j];
 
             int playerIdx = -1;
-            for (int k = 0; k < players.size(); k++) {
+            for (int k = 0; k < static_cast<int>(players.size()); k++) {
                 if (players[k]->getXpos() == i && players[k]->getYpos() == j) {
                     playerIdx = k;
                 }

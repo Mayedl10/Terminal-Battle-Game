@@ -23,7 +23,7 @@ int InputQuery::query() {
     }
 
     std::cout << "Please select one of the following options" << std::endl;
-    for (int i = 0; i < options.size(); i++) {
+    for (int i = 0; i < static_cast<int>(options.size()); i++) {
         if (options[i].second) // skip disabled options
             std::cout << "[" << i+1 << "] " << options[i].first << std::endl;
     }
@@ -38,14 +38,14 @@ void InputQuery::addOption(std::pair<std::string, bool>& option) {
 
 
 void InputQuery::setVisibility(int index, bool isVisible) {
-    if (index >= options.size() || index < 0) {
+    if (index >= static_cast<int>(options.size()) || index < 0) {
         throw std::invalid_argument("InputQuery::setVisibility: index " + std::to_string(index) + " out of range for InputQuery object with " + std::to_string(options.size()) + " available entries");
     }
     options[index].second = isVisible;
 }
 
 bool InputQuery::isVisible(int index) {
-    if (index >= options.size() || index < 0) {
+    if (index >= static_cast<int>(options.size()) || index < 0) {
         throw std::invalid_argument("InputQuery::isVisible: index " + std::to_string(index) + " out of range for InputQuery object with " + std::to_string(options.size()) + " available entries");
     }
     return options[index].second;
