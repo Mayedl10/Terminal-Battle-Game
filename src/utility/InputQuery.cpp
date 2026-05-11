@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 
-const std::vector<std::pair<std::string, bool>>& InputQuery::getOptions() const {
+std::vector<std::pair<std::string, bool>>& InputQuery::getOptions() {
     return options;
 }
 
@@ -32,10 +32,35 @@ int InputQuery::query() {
 
 }
 
-InputQuery::InputQuery(const std::vector<std::pair<std::string, bool>>& opts)
+void InputQuery::addOption(std::pair<std::string, bool>& option) {
+    options.push_back(option);
+}
+
+
+void InputQuery::setVisibility(int index, bool isVisible) {
+    if (index >= options.size() || index < 0) {
+        throw std::invalid_argument("InputQuery::setVisibility: index " + std::to_string(index) + " out of range for InputQuery object with " + std::to_string(options.size()) + " available entries");
+    }
+    options[index].second = isVisible;
+}
+
+bool InputQuery::isVisible(int index) {
+    if (index >= options.size() || index < 0) {
+        throw std::invalid_argument("InputQuery::isVisible: index " + std::to_string(index) + " out of range for InputQuery object with " + std::to_string(options.size()) + " available entries");
+    }
+    return options[index].second;
+}
+
+InputQuery::InputQuery(std::vector<std::pair<std::string, bool>>& opts)
     : options{opts}
     {
         if (options.size() < 1) {
             throw std::invalid_argument("InputQuery::InputQuery: please provide enough options");
         }
+    }
+
+InputQuery::InputQuery() 
+    : options{{}}
+    {
+        // no-args constructor doesn't throw exception
     }

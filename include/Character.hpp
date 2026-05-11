@@ -3,6 +3,7 @@
 #include <array>
 
 #include "Item.hpp"
+#include "InputQuery.hpp"
 
 struct CharacterAttributes {
     int speed;
@@ -32,6 +33,12 @@ class Character {
     CharacterAttributes attributes;
 
     void setClassAttributes();
+    InputQuery queryObject;
+    
+    void setQueryObject(InputQuery& qu);
+    void setQueryObject(std::vector<std::pair<std::string, bool>>&& opts); // matching InputQuery constructor
+
+    void initialiseQueryObject();
 
 public:
 
@@ -42,7 +49,10 @@ public:
         CharacterClass::CC_Rogue
     };
 
+    InputQuery& getQueryObject();
+
     char getName();
+    char getNameUpper();
 
     int getSpeed();
     void setSpeed(int newSpeed);

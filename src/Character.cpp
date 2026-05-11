@@ -1,8 +1,22 @@
 #include "Character.hpp"
 #include "Item.hpp"
 #include "Classes.hpp"
+#include "InputQuery.hpp"
 
 #include <cctype>
+
+void Character::setQueryObject(InputQuery& qu) {
+    queryObject = qu;
+}
+
+// matching InputQuery constructor
+void Character::setQueryObject(std::vector<std::pair<std::string, bool>>&& opts) {
+    queryObject = InputQuery(opts);
+}
+
+InputQuery& Character::getQueryObject() {
+    return queryObject;
+}
 
 int Character::getSpeed() {
     return attributes.speed;
@@ -61,40 +75,59 @@ void Character::setYpos(int newYpos) {
 }
 
 bool Character::isHuman() {
-    return this->isHumanPlayer;
+    return isHumanPlayer;
 }
 
 void Character::setIsHuman(bool isHuman) {
-    this->isHumanPlayer = isHuman;
+    isHumanPlayer = isHuman;
 }
 
 char Character::getName() {
-    if (this->isHuman()) {
-        return this->name;
+    if (isHuman()) {
+        return name;
     } else {
         // return lowercase name if character isnt human
-        return (char)(std::tolower(this->name));
+        return (char)(std::tolower(name));
     }
 }
 
+char Character::getNameUpper() {
+    return name;
+}
+
 void Character::setClassAttributes() {
-    switch (this->charClass) {
+    switch (charClass) {
     case CharacterClass::CC_Fighter:
-        this->attributes = CharacterClasses::fighterAttr;
+        attributes = CharacterClasses::fighterAttr;
         break;
     case CharacterClass::CC_Mage:
-        this->attributes = CharacterClasses::mageAttr;
+        attributes = CharacterClasses::mageAttr;
         break;
     case CharacterClass::CC_Rogue:
-        this->attributes = CharacterClasses::rogueAttr;
+        attributes = CharacterClasses::rogueAttr;
         break;
     case CharacterClass::CC_Ranger:
-        this->attributes = CharacterClasses::rangerAttr;
+        attributes = CharacterClasses::rangerAttr;
         break;
     default:
-        this->attributes = CharacterClasses::invalidAttr;
+        attributes = CharacterClasses::invalidAttr;
         break;
     }
+}
+
+void Character::initialiseQueryObject() {
+    // set default options that every character has
+    setQueryObject({
+        {"Move N", true},
+        {"Move E", true},
+        {"Move S", true},
+        {"Move W", true},
+        {"Attack", true},
+        {"Get Status", true},
+        {"Do Nothing", true},
+        {"Use Item", false},    // hidden when character doesn't have an item
+        {"Drop Item", false}    // ^
+    });
 }
 
 Character::Character(char name, CharacterClass charClass, bool isHuman) {
@@ -105,6 +138,7 @@ Character::Character(char name, CharacterClass charClass, bool isHuman) {
     heldItem = ItemType::IT_None;
 
     setClassAttributes();
+    initialiseQueryObject();
     
     // let Game object set positions
 }

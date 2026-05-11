@@ -6,11 +6,15 @@
 
 class InputQuery {
     // pairs: {text, isEnabled}
-    const std::vector<std::pair<std::string, bool>> options;
+    std::vector<std::pair<std::string, bool>> options;
 
 public:
-    const std::vector<std::pair<std::string, bool>>& getOptions() const;
+    std::vector<std::pair<std::string, bool>>& getOptions();
     int query();
+    void addOption(std::pair<std::string, bool>& option);
+    void setVisibility(int index, bool isVisible);
+    bool isVisible(int index);
 
-    InputQuery(const std::vector<std::pair<std::string, bool>>& opts);
+    InputQuery(std::vector<std::pair<std::string, bool>>& opts);
+    InputQuery(); // no-arg constructor
 };
