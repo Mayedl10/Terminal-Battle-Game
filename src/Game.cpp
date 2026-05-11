@@ -13,8 +13,25 @@
 #include "Classes.hpp"
 #include "Tile.hpp"
 
-void Game::runGameCycle() {
+// returns false if the game is over
+bool Game::runGameCycle() {
+    int aliveCount = 0;
+    for (auto& ch: characters) {
+        if (ch->getHealth() > 0.0) {
+            aliveCount++;
+        }
+    }
+    // exit if the game is over
+    if (aliveCount < 1) {
+        return false;
+    }
 
+    // query front-of-queue character for an action or make AI decide
+
+    // move front-of-queue character to the back
+
+    // no need to check if the game is over, the next cycle deals with that
+    return true;
 }
 
 std::mt19937& Game::getRNG() {
@@ -145,6 +162,19 @@ Game::Game(const std::string& levelFolderPath, const int characterCount, const i
 
     selectRandomLevel();
     placePlayers();
+
+    /*
+    * sort characters by speed
+    * 
+    * an std::deque is used, so i can a) sort it and b) treat it like a regular queue
+    * this way, I can always handle only the character at the front for each turn, without
+    * having to worry about weird indexing shenanigans
+    */
+    std::sort(characters.begin(), characters.end(), 
+        [](const std::unique_ptr<Character>& a, const std::unique_ptr<Character>& b) {
+            return (a->getSpeed() > b->getSpeed()); // high speed comes first
+        }
+    );
 
     levels[getLevelIdx()]->displayLevel(characters);
 }

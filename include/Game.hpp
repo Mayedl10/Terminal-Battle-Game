@@ -23,7 +23,8 @@ class Game {
 
 public:
 
-    void runGameCycle();
+    // returns false if the game is over
+    bool runGameCycle();
 
     int getLevelIdx();
     void setLevelIdx(int idx);
