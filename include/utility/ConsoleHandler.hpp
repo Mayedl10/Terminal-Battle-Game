@@ -1,10 +1,6 @@
 #pragma once
 
 #include <string>
-#include <iostream>
-
-#include "Game.hpp"
-#include "Level.hpp"
 
 enum OutputColours {
 
@@ -25,8 +21,10 @@ public:
         //      works
     }
 
-    static void printColour(std::string message, OutputColours col);
-
     static int readInteger();
+
+    static int readIntInRange(int lower, int upper);
+
+    static void printColour(std::string message, OutputColours col);
 
 };
