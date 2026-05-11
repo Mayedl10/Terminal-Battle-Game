@@ -22,14 +22,14 @@ int InputQuery::query() {
         throw std::runtime_error("InputQuery::query: cannot produce valid query without any enabled options");
     }
 
-    std::cout << "Please select one of the followind options" << std::endl;
+    std::cout << "Please select one of the following options" << std::endl;
     for (int i = 0; i < options.size(); i++) {
         if (options[i].second) // skip disabled options
             std::cout << "[" << i+1 << "] " << options[i].first << std::endl;
     }
     
     // ConsoleHandler::readIntInRange()
-
+    return ConsoleHandler::readIntInRange(1, options.size());
 }
 
 void InputQuery::addOption(std::pair<std::string, bool>& option) {
@@ -51,7 +51,7 @@ bool InputQuery::isVisible(int index) {
     return options[index].second;
 }
 
-InputQuery::InputQuery(std::vector<std::pair<std::string, bool>>& opts)
+InputQuery::InputQuery(std::vector<std::pair<std::string, bool>>&& opts)
     : options{opts}
     {
         if (options.size() < 1) {
