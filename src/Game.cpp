@@ -91,10 +91,10 @@ void Game::loadPlayers(const int characterCount, const int AIcharacterCount) {
     std::uniform_int_distribution<int> classDistribution(0, 3);
     
     InputQuery classQuery = InputQuery({
-        {"Fighter", true, CharacterClass::CC_Fighter},  // 1
-        {"Sorcerer", true, CharacterClass::CC_Mage},  // 2
-        {"Rogue", true, CharacterClass::CC_Rogue},    // 3
-        {"Ranger", true, CharacterClass::CC_Ranger}    // 4
+        {"Fighter", true, CharacterClass::CC_Fighter},
+        {"Sorcerer", true, CharacterClass::CC_Mage},
+        {"Rogue", true, CharacterClass::CC_Rogue},
+        {"Ranger", true, CharacterClass::CC_Ranger}
     });
 
     for (int i = 0; i < characterCount; i++) {

@@ -8,7 +8,7 @@
 enum TileType : char {
     TT_Invalid          = '?',
     TT_Wall             = '#',
-    TT_Hole             = 'O',
+    TT_Hole             = '*',
     TT_Regular          = '.',
     TT_CharacterSpawn   = '@',
     TT_VISUAL_HasItem   = '!'   // no tile should actually have this
