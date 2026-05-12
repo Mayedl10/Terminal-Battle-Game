@@ -100,10 +100,8 @@ void Game::loadPlayers(const int characterCount, const int AIcharacterCount) {
     for (int i = 0; i < characterCount; i++) {
         if (i >= AIcharacterCount) {
 
-            std::cout << "Player " << std::to_string(nameCounter+1) << ", please select a character class." << std::endl;
+            std::cout << "Player " << (char)(nameCounter) << ", please select a character class." << std::endl;
             CharacterClass cclass = (CharacterClass)classQuery.query();
-
-            
 
             characters.push_back(std::make_unique<Character>(
                 nameCounter++,  // increment player counter
