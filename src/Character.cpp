@@ -10,7 +10,7 @@ void Character::setQueryObject(InputQuery& qu) {
 }
 
 // matching InputQuery constructor
-void Character::setQueryObject(std::vector<std::pair<std::string, bool>>&& opts) {
+void Character::setQueryObject(std::vector<Query>&& opts) {
     queryObject = InputQuery(std::move(opts));  // std::move because of lvalue / rvalue stuff
 }
 
@@ -118,15 +118,15 @@ void Character::setClassAttributes() {
 void Character::initialiseQueryObject() {
     // set default options that every character has
     setQueryObject({
-        {"Move N", true},
-        {"Move E", true},
-        {"Move S", true},
-        {"Move W", true},
-        {"Attack", true},
-        {"Get Status", true},
-        {"Do Nothing", true},
-        {"Use Item", false},    // hidden when character doesn't have an item
-        {"Drop Item", false}    // ^
+        {"Move N", true, QueryOptionsCharacterAction::MOVE_N},
+        {"Move E", true, QueryOptionsCharacterAction::MOVE_E},
+        {"Move S", true, QueryOptionsCharacterAction::MOVE_S},
+        {"Move W", true, QueryOptionsCharacterAction::MOVE_W},
+        {"Attack", true, QueryOptionsCharacterAction::ATTACK},
+        {"Get Status", true, QueryOptionsCharacterAction::STATUS},
+        {"Do Nothing", true, QueryOptionsCharacterAction::PASS},
+        {"Use Item", false, QueryOptionsCharacterAction::USE_ITEM},    // hidden when character doesn't have an item
+        {"Drop Item", false, QueryOptionsCharacterAction::DROP_ITEM}    // ^
     });
 }
 

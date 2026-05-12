@@ -89,36 +89,21 @@ void Game::loadPlayers(const int characterCount, const int AIcharacterCount) {
 
     char nameCounter = 'A';
     std::uniform_int_distribution<int> classDistribution(0, 3);
-
+    
     InputQuery classQuery = InputQuery({
-        {"Fighter", true},  // 1
-        {"Sorcerer", true},  // 2
-        {"Rogue", true},    // 3
-        {"Ranger", true}    // 4
+        {"Fighter", true, CharacterClass::CC_Fighter},  // 1
+        {"Sorcerer", true, CharacterClass::CC_Mage},  // 2
+        {"Rogue", true, CharacterClass::CC_Rogue},    // 3
+        {"Ranger", true, CharacterClass::CC_Ranger}    // 4
     });
 
     for (int i = 0; i < characterCount; i++) {
         if (i >= AIcharacterCount) {
 
             std::cout << "Player " << std::to_string(nameCounter+1) << ", please select a character class." << std::endl;
-            int response = classQuery.query();
-            CharacterClass cclass = CharacterClass::CC_Invalid;
+            CharacterClass cclass = (CharacterClass)classQuery.query();
 
-            switch (response) {
-                case 1:
-                    cclass = CharacterClass::CC_Fighter;
-                    break;
-                case 2:
-                    cclass = CharacterClass::CC_Mage;
-                    break;
-                case 3:
-                    cclass = CharacterClass::CC_Rogue;
-                    break;
-                case 4:
-                    cclass = CharacterClass::CC_Ranger;
-                    break;
-                // no default case needed, cclass already contains CC_Invalid
-            }
+            
 
             characters.push_back(std::make_unique<Character>(
                 nameCounter++,  // increment player counter

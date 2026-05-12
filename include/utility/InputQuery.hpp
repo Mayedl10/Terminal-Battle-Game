@@ -4,17 +4,27 @@
 #include <string>
 #include <utility>
 
+struct Query {
+    std::string message;
+    bool isVisible;
+    int returnValue;
+    Query(std::string msg, bool visible, int value) 
+    : message{msg},
+      isVisible{visible},
+      returnValue{value}
+    {}
+};
+
 class InputQuery {
-    // pairs: {text, isEnabled}
-    std::vector<std::pair<std::string, bool>> options;
+    std::vector<Query> options;
 
 public:
-    std::vector<std::pair<std::string, bool>>& getOptions();
+    std::vector<Query>& getOptions();
     int query();
-    void addOption(std::pair<std::string, bool>& option);
+    void addOption(Query& option);
     void setVisibility(int index, bool isVisible);
     bool isVisible(int index);
 
-    InputQuery(std::vector<std::pair<std::string, bool>>&& opts);
+    InputQuery(std::vector<Query>&& opts);
     InputQuery(); // no-arg constructor
 };

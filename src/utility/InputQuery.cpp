@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 
-std::vector<std::pair<std::string, bool>>& InputQuery::getOptions() {
+std::vector<Query>& InputQuery::getOptions() {
     return options;
 }
 
@@ -13,7 +13,7 @@ int InputQuery::query() {
 
     int enabledCount = 0;
     for (auto& option: getOptions()) {
-        if (option.second) {
+        if (option.isVisible) {
             enabledCount++;
         }
     }
@@ -24,15 +24,19 @@ int InputQuery::query() {
 
     std::cout << "Please select one of the following options" << std::endl;
     for (int i = 0; i < static_cast<int>(options.size()); i++) {
-        if (options[i].second) // skip disabled options
-            std::cout << "[" << i+1 << "] " << options[i].first << std::endl;
+        if (options[i].isVisible) // skip disabled options
+            std::cout << "[" << i+1 << "] " << options[i].message << std::endl;
     }
     
     // ConsoleHandler::readIntInRange()
-    return ConsoleHandler::readIntInRange(1, options.size());
+    int idx = ConsoleHandler::readIntInRange(1, options.size());
+
+    // todo: handle disabled options
+
+    return options[idx].returnValue;
 }
 
-void InputQuery::addOption(std::pair<std::string, bool>& option) {
+void InputQuery::addOption(Query& option) {
     options.push_back(option);
 }
 
@@ -41,17 +45,17 @@ void InputQuery::setVisibility(int index, bool isVisible) {
     if (index >= static_cast<int>(options.size()) || index < 0) {
         throw std::invalid_argument("InputQuery::setVisibility: index " + std::to_string(index) + " out of range for InputQuery object with " + std::to_string(options.size()) + " available entries");
     }
-    options[index].second = isVisible;
+    options[index].isVisible = isVisible;
 }
 
 bool InputQuery::isVisible(int index) {
     if (index >= static_cast<int>(options.size()) || index < 0) {
         throw std::invalid_argument("InputQuery::isVisible: index " + std::to_string(index) + " out of range for InputQuery object with " + std::to_string(options.size()) + " available entries");
     }
-    return options[index].second;
+    return options[index].isVisible;
 }
 
-InputQuery::InputQuery(std::vector<std::pair<std::string, bool>>&& opts)
+InputQuery::InputQuery(std::vector<Query>&& opts)
     : options{opts}
     {
         if (options.size() < 1) {

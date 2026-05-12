@@ -36,9 +36,21 @@ class Character {
     InputQuery queryObject;
     
     void setQueryObject(InputQuery& qu);
-    void setQueryObject(std::vector<std::pair<std::string, bool>>&& opts); // matching InputQuery constructor
+    void setQueryObject(std::vector<Query>&& opts); // matching InputQuery constructor
 
     void initialiseQueryObject();
+
+    enum QueryOptionsCharacterAction :int {
+        MOVE_N,
+        MOVE_S,
+        MOVE_E,
+        MOVE_W,
+        ATTACK,
+        STATUS,
+        PASS,
+        USE_ITEM,
+        DROP_ITEM
+    };
 
 public:
 
