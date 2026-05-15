@@ -21,7 +21,6 @@ int Level::getMaxSupportedCharacters() {
     return maxSupportedCharacters;
 }
 
-// TODO: display players
 void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
 
     std::vector<std::pair<int, int>> playerPositions;

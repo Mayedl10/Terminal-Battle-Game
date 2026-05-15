@@ -6,6 +6,7 @@
 #include <chrono>
 #include <algorithm>
 #include <utility>
+#include <cmath>
 
 #include "Game.hpp"
 #include "Character.hpp"
@@ -13,6 +14,7 @@
 #include "Classes.hpp"
 #include "Tile.hpp"
 #include "InputQuery.hpp"
+#include "MathUtils.hpp"
 
 // returns false if the game is over
 bool Game::runGameCycle() {
@@ -28,11 +30,73 @@ bool Game::runGameCycle() {
     }
 
     // query front-of-queue character for an action or make AI decide
+    auto choice = characters.front()->pickAction();
+
+    // todo: actually execute actions
 
     // move front-of-queue character to the back
+    enqueueFrontCharacter();
 
     // no need to check if the game is over, the next cycle deals with that
     return true;
+}
+
+bool Game::attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<Character>& target) {
+    // note: the following setup would return true (walls aren't connected diagonally)
+    /*
+    B . . #
+    . . # .
+    . # . .
+    # . . A
+    */
+    // to prevent this, make walls "thick" when designing levels
+    /*
+    B . # #
+    . # # .
+    # # . .
+    # . . A
+    */
+
+    std::pair<int, int> attPos = {
+        attacker->getXpos(),
+        attacker->getYpos()
+    };
+    std::pair<int, int> tarPos = {
+        target->getXpos(),
+        target->getYpos()
+    };
+
+    // return false if target is too far away
+    if (!MathUtils::pointInRange(attPos, static_cast<double>(attacker->getRange()), tarPos)) {
+        return false;
+    }
+
+    // if target is in range, perform raymarching to see if there is a wall obstructing the path.
+    // use Bresenham's line algorithm
+
+    auto& map = levels[getLevelIdx()]->getMap();
+    auto line = MathUtils::bresenhamsLineAlgorithm(attPos, tarPos);
+
+    // check if any of the bresenham line points are walls
+    // return if any of them are
+    for (auto p: line) {
+        if (map[p.first][p.second].type == TileType::TT_Wall) {
+            return false;
+        } 
+    }
+
+    // attack is valid
+    target->hurt(attacker->getStrength());
+
+    return true;
+}
+
+
+
+// move a character to the back of the queue
+void Game::enqueueFrontCharacter() {
+    characters.emplace_back(std::move(characters.front()));
+    characters.pop_front();
 }
 
 std::mt19937& Game::getRNG() {

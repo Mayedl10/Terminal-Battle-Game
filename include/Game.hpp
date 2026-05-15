@@ -6,6 +6,7 @@
 #include <string_view>
 #include <memory>
 #include <random>
+#include <utility>
 
 #include "Character.hpp"
 #include "Level.hpp"
@@ -20,6 +21,11 @@ class Game {
     void loadPlayers(const int characterCount, const int humanCharacterCount);
     void selectRandomLevel();
     void placePlayers();
+    void enqueueFrontCharacter(); // moves the character at the front of the player deque to the back
+
+    // returns false if the attack failed
+    // if it succeeds, the function applies damage automatically
+    bool attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<Character>& target);
 
 public:
 

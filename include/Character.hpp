@@ -23,6 +23,18 @@ enum CharacterClass {
     CC_Rogue
 };
 
+enum QueryOptionsCharacterAction :int {
+    MOVE_N,
+    MOVE_S,
+    MOVE_E,
+    MOVE_W,
+    ATTACK,
+    STATUS,
+    PASS,
+    USE_ITEM,
+    DROP_ITEM
+};
+
 class Character {
     ItemType heldItem;
     CharacterClass charClass;
@@ -40,17 +52,7 @@ class Character {
 
     void initialiseQueryObject();
 
-    enum QueryOptionsCharacterAction :int {
-        MOVE_N,
-        MOVE_S,
-        MOVE_E,
-        MOVE_W,
-        ATTACK,
-        STATUS,
-        PASS,
-        USE_ITEM,
-        DROP_ITEM
-    };
+    QueryOptionsCharacterAction pickActionAI();
 
 public:
 
@@ -89,6 +91,10 @@ public:
 
     bool isHuman();
     void setIsHuman(bool isHuman);
+
+    void hurt(float damage);
+
+    QueryOptionsCharacterAction pickAction();
 
     Character(char name, CharacterClass charClass, bool isHuman);
 };

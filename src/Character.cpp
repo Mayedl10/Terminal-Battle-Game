@@ -95,6 +95,10 @@ char Character::getNameUpper() {
     return name;
 }
 
+void Character::hurt(float damage) {
+    setHealth(getHealth() - damage);
+}
+
 void Character::setClassAttributes() {
     switch (charClass) {
     case CharacterClass::CC_Fighter:
@@ -113,6 +117,18 @@ void Character::setClassAttributes() {
         attributes = CharacterClasses::invalidAttr;
         break;
     }
+}
+
+QueryOptionsCharacterAction Character::pickAction() {
+    if (!isHuman()) {
+        return pickActionAI();
+    }
+
+    return static_cast<QueryOptionsCharacterAction>(queryObject.query());
+}
+
+QueryOptionsCharacterAction Character::pickActionAI() {
+    return QueryOptionsCharacterAction::PASS; // todo
 }
 
 void Character::initialiseQueryObject() {
