@@ -27,13 +27,23 @@ int InputQuery::query() {
         if (options[i].isVisible) // skip disabled options
             std::cout << "[" << i+1 << "] " << options[i].message << std::endl;
     }
-    
-    // ConsoleHandler::readIntInRange()
-    int idx = ConsoleHandler::readIntInRange(1, options.size());
 
-    // todo: handle disabled options
+    int idx;
 
-    return options[idx].returnValue;
+    do {
+
+        // ConsoleHandler::readIntInRange()
+        idx = ConsoleHandler::readIntInRange(1, options.size());
+
+        if (!options[idx-1].isVisible) {
+            std::cout << "Please select a valid option. Some options have been disabled." << std::endl;
+        }
+
+        // handle disabled options
+    } while (!options[idx-1].isVisible);
+
+
+    return options[idx-1].returnValue;
 }
 
 void InputQuery::addOption(Query& option) {
