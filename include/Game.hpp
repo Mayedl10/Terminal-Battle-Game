@@ -26,6 +26,8 @@ class Game {
     // returns false if the attack failed
     // if it succeeds, the function applies damage automatically
     bool attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<Character>& target);
+    void characterAction(std::unique_ptr<Character>& character, QueryOptionsCharacterAction action);
+    void moveCharacter(std::unique_ptr<Character>& character, QueryOptionsCharacterAction direction, int distance);
 
 public:
 

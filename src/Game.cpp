@@ -15,6 +15,7 @@
 #include "Tile.hpp"
 #include "InputQuery.hpp"
 #include "MathUtils.hpp"
+#include "ConsoleHandler.hpp"
 
 // returns false if the game is over
 bool Game::runGameCycle() {
@@ -29,10 +30,13 @@ bool Game::runGameCycle() {
         return false;
     }
 
+    levels[getLevelIdx()]->displayLevel(characters);
+
     // query front-of-queue character for an action or make AI decide
     auto choice = characters.front()->pickAction();
 
     // todo: actually execute actions
+    characterAction(characters.front(), choice);
 
     // move front-of-queue character to the back
     enqueueFrontCharacter();
@@ -80,7 +84,7 @@ bool Game::attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<C
     // check if any of the bresenham line points are walls
     // return if any of them are
     for (auto p: line) {
-        if (map[p.first][p.second].type == TileType::TT_Wall) {
+        if (map[p.second][p.first].type == TileType::TT_Wall) {
             return false;
         } 
     }
@@ -91,6 +95,111 @@ bool Game::attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<C
     return true;
 }
 
+void Game::characterAction(std::unique_ptr<Character>& character, QueryOptionsCharacterAction action) {
+    switch (action) {
+    case QueryOptionsCharacterAction::ATTACK:
+        break;
+    case QueryOptionsCharacterAction::STATUS:
+        break;
+    case QueryOptionsCharacterAction::PASS:
+        break;
+    case QueryOptionsCharacterAction::USE_ITEM:
+        break;
+    case QueryOptionsCharacterAction::DROP_ITEM:
+        break;
+    default: // if it's none of the above, it's probably a direction. if it isn't, let moveCharacter throw an exception
+        // todo: query distance
+        int dist = ConsoleHandler::readIntInRange(1, character->getSpeed());
+        moveCharacter(character, action, dist);
+        break;
+    }
+}
+
+void Game::moveCharacter(std::unique_ptr<Character>& character, QueryOptionsCharacterAction direction, int distance) {
+    if (distance <= 0 || distance > character->getSpeed()) {
+        throw std::invalid_argument(
+            "Game::moveCharacter: invalid argument <distance>: " + std::to_string(distance)
+            + " is out of range for <character>: " + std::to_string(character->getNameUpper()) 
+            + " with maximum <speed>: " + std::to_string(character->getSpeed())
+        );
+    }
+    
+    auto& level = levels[getLevelIdx()];
+
+    switch (direction) {
+    case QueryOptionsCharacterAction::MOVE_N:
+        while (distance > 0) {
+            int nextY = character->getYpos() -1;
+
+            if (nextY < 0) {
+                break; // out of bounds
+            }
+            auto nextTile = level->getTileTypeAt(character->getXpos(), nextY);
+            if (nextTile == TileType::TT_Hole || nextTile == TileType::TT_Wall) {
+                break; // hit a wall/hole
+            }
+
+            // movement is valid
+            character->setYpos(nextY);
+            distance--;
+        }
+        break;
+    case QueryOptionsCharacterAction::MOVE_E:
+        while (distance > 0) {
+            int nextX = character->getXpos() +1;
+
+            if (nextX > level->getWidth()-1) {
+                break; // out of bounds
+            }
+            auto nextTile = level->getTileTypeAt(nextX, character->getYpos());
+            if (nextTile == TileType::TT_Hole || nextTile == TileType::TT_Wall) {
+                break; // hit a wall/hole
+            }
+
+            // movement is valid
+            character->setXpos(nextX);
+            distance--;
+        }
+        break;
+    case QueryOptionsCharacterAction::MOVE_S:
+        while (distance > 0) {
+            int nextY = character->getYpos() +1;
+
+            if (nextY > level->getHeight()-1) {
+                break; // out of bounds
+            }
+            auto nextTile = level->getTileTypeAt(character->getXpos(), nextY);
+            if (nextTile == TileType::TT_Hole || nextTile == TileType::TT_Wall) {
+                break; // hit a wall/hole
+            }
+
+            // movement is valid
+            character->setYpos(nextY);
+            distance--;
+        }
+        break;
+    case QueryOptionsCharacterAction::MOVE_W:
+        while (distance > 0) {
+            int nextX = character->getXpos() -1;
+
+            if (nextX < 0) {
+                break; // out of bounds
+            }
+            auto nextTile = level->getTileTypeAt(nextX, character->getYpos());
+            if (nextTile == TileType::TT_Hole || nextTile == TileType::TT_Wall) {
+                break; // hit a wall/hole
+            }
+
+            // movement is valid
+            character->setXpos(nextX);
+            distance--;
+        }
+        break;
+    default:
+        throw std::invalid_argument("Game::moveCharacter: invalid argument <direction>: " + std::to_string(direction));
+        break;
+    }
+}
 
 
 // move a character to the back of the queue
@@ -135,7 +244,7 @@ void Game::loadLevels(const std::string& levelFolderPath) {
         }
         catch(const std::exception& e) {
             std::cerr << "An exception occurred while trying to load level: " << levelFile << "\n"
-            << e.what() << std::endl;;
+            << e.what() << std::endl;
             throw;
         } 
     }
@@ -208,7 +317,7 @@ void Game::placePlayers() {
     for (int i = 0; i < static_cast<int>(map.size()); i++) {
         for (int j = 0; j < static_cast<int>(map[i].size()); j++) {
             if (map[i][j].type == TileType::TT_CharacterSpawn) {
-                validPositions.push_back({i, j});
+                validPositions.push_back({j, i});
             }
         }
     }
@@ -249,7 +358,6 @@ Game::Game(const std::string& levelFolderPath, const int characterCount, const i
         }
     );
 
-    levels[getLevelIdx()]->displayLevel(characters);
 }
 
 Game::~Game() {

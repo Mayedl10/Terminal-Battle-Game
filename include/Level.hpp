@@ -22,6 +22,9 @@ public:
     int getMaxSupportedCharacters();
 
     void displayLevel(std::deque<std::unique_ptr<Character>>& players);
+    TileType getTileTypeAt(int x, int y);
+    int getWidth();
+    int getHeight();
 
     Level(std::string levelFilePath);
 };

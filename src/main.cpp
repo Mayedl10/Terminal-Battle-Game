@@ -5,7 +5,9 @@
 
 int main(int argc, char **argv) {
 
-    Game test("./data/levels/", 5, 3);
+    Game test("./data/levels/", 2, 0);
     
-
+    while (test.runGameCycle()) {
+    }
+    
 }

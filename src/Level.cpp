@@ -33,7 +33,7 @@ void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
 
             int playerIdx = -1;
             for (int k = 0; k < static_cast<int>(players.size()); k++) {
-                if (players[k]->getXpos() == i && players[k]->getYpos() == j) {
+                if (players[k]->getXpos() == j && players[k]->getYpos() == i) {
                     playerIdx = k;
                 }
             }
@@ -84,6 +84,24 @@ void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
         }
         std::cout << std::endl;
     }
+}
+
+TileType Level::getTileTypeAt(int x, int y) {
+    return map[y][x].type;
+}
+
+int Level::getWidth() {
+    if (map.size() == 0) {
+        return 0;
+    }
+    return static_cast<int>(map[0].size());
+}
+
+int Level::getHeight() {
+    if (map.size() == 0) {
+        return 0;
+    }
+    return static_cast<int>(map.size());
 }
 
 Level::Level(std::string levelFilePath) {
