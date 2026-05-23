@@ -1,10 +1,10 @@
 #pragma once
 
 #include <string>
+#include <memory>
+#include <deque>
 
-enum OutputColours {
-
-};
+#include "Character.hpp"
 
 class ConsoleHandler {
 public:
@@ -14,6 +14,6 @@ public:
 
     static int readIntInRange(int lower, int upper);
 
-    static void printColour(std::string message, OutputColours col);
+    static std::unique_ptr<Character>& queryCharacter(std::deque<std::unique_ptr<Character>>& characters);
 
 };

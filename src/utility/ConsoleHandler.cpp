@@ -3,6 +3,10 @@
 #include <string>
 #include <iostream>
 #include <limits>
+#include <vector>
+#include <cctype>
+#include <memory>
+#include <deque>
 
 void ConsoleHandler::clearScreen() {
     // ANSI escape sequence that clears the screen and then resets the cursor position
@@ -34,5 +38,35 @@ int ConsoleHandler::readIntInRange(int lower, int upper) {
         int choice = readInteger();
         if (choice >= lower && choice <= upper) return choice;
         std::cout << "Input must be a number >= " << lower << " and <= " << upper << std::endl;
+    }
+}
+
+std::unique_ptr<Character>& ConsoleHandler::queryCharacter(std::deque<std::unique_ptr<Character>>& characters) {
+    while (true) {
+        std::cout << "> ";
+
+        char choice;
+        if (!(std::cin >> choice)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Input must be a valid character. Please try again." << std::endl;
+            continue;
+        }
+
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        const char selectedName = static_cast<char>(std::toupper(static_cast<unsigned char>(choice)));
+        if (selectedName < 'A' || selectedName > 'Z') {
+            std::cout << "Input must be a letter between A and Z. Please try again." << std::endl;
+            continue;
+        }
+
+        for (auto& character: characters) {
+            if (character && character->isAlive() && character->getNameUpper() == selectedName) {
+                return character;
+            }
+        }
+
+        std::cout << "No living character with that name exists. Please try again." << std::endl;
     }
 }
