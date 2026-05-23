@@ -16,11 +16,11 @@ struct CharacterClasses {
         // int range;
         1,
         // float strength;
-        5.0,
+        5.0f,
         // float defense;  // gets multiplied with damage; range 0.0f~1.0f
-        0.4,
+        0.4f,
         // float health;   // range 0.0f~100.0f
-        50.0,
+        50.0f,
         // bool hasMagic;
         false
     };
@@ -31,11 +31,11 @@ struct CharacterClasses {
         // int range;
         10,
         // float strength;
-        2.0,
+        2.0f,
         // float defense;  // gets multiplied with damage; range 0.0f~1.0f
-        0.6,
+        0.6f,
         // float health;   // range 0.0f~100.0f
-        40.0,
+        40.0f,
         // bool hasMagic;
         false
     };
@@ -46,11 +46,11 @@ struct CharacterClasses {
         // int range;
         8,
         // float strength;
-        10.0,
+        10.0f,
         // float defense;  // gets multiplied with damage; range 0.0f~1.0f
-        1.0,
+        1.0f,
         // float health;   // range 0.0f~100.0f
-        30.0,
+        30.0f,
         // bool hasMagic;
         true
     };
@@ -61,11 +61,11 @@ struct CharacterClasses {
         // int range;
         2,
         // float strength;
-        4.0,
+        4.0f,
         // float defense;  // gets multiplied with damage; range 0.0f~1.0f
-        0.4,
+        0.4f,
         // float health;   // range 0.0f~100.0f
-        40.0,
+        40.0f,
         // bool hasMagic;
         false
     };
@@ -76,11 +76,11 @@ struct CharacterClasses {
         // int range;
         0,
         // float strength;
-        0.0,
+        0.0f,
         // float defense;  // gets multiplied with damage; range 0.0f~1.0f
-        0.0,
+        0.0f,
         // float health;   // range 0.0f~100.0f
-        0.0,
+        0.0f,
         // bool hasMagic;
         false
     };

@@ -22,7 +22,7 @@ bool Game::runGameCycle() {
     ConsoleHandler::clearScreen();
     int aliveCount = 0;
     for (auto& ch: characters) {
-        if (ch->getHealth() > 0.0) {
+        if (ch->getHealth() > 0.0f) {
             aliveCount++;
         }
     }
@@ -303,8 +303,8 @@ void Game::loadPlayers(const int characterCount, const int AIcharacterCount) {
     for (int i = 0; i < characterCount; i++) {
         if (i >= AIcharacterCount) {
 
-            std::cout << "Player " << (char)(nameCounter) << ", please select a character class." << std::endl;
-            CharacterClass cclass = (CharacterClass)classQuery.query();
+            std::cout << "Player " << static_cast<char>(nameCounter) << ", please select a character class." << std::endl;
+            CharacterClass cclass = static_cast<CharacterClass>(classQuery.query());
 
             characters.push_back(std::make_unique<Character>(
                 nameCounter++,  // increment player counter
@@ -326,7 +326,7 @@ void Game::loadPlayers(const int characterCount, const int AIcharacterCount) {
 void Game::selectRandomLevel() {
     // unloads all levels that don't support enough players!
     // looping backwards to avoid shifting indexes
-    for (int i = levels.size()-1; i >= 0; i--) {
+    for (int i = static_cast<int>(levels.size())-1; i >= 0; i--) {
         if (levels[i]->getMaxSupportedCharacters() < static_cast<int>(characters.size())) {
             levels.erase(levels.begin() + i);
         }
@@ -336,7 +336,7 @@ void Game::selectRandomLevel() {
         throw std::runtime_error("Game::selectRandomLevel: no provided level can hold enough characters");
     }
 
-    std::uniform_int_distribution<int> classDistribution(0, levels.size()-1);
+    std::uniform_int_distribution<int> classDistribution(0, static_cast<int>(levels.size())-1);
     this->setLevelIdx(classDistribution(getRNG()));
 }
 

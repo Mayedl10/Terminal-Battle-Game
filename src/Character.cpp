@@ -93,7 +93,7 @@ char Character::getName() {
         return name;
     } else {
         // return lowercase name if character isnt human
-        return (char)(std::tolower(name));
+        return static_cast<char>(std::tolower(name));
     }
 }
 

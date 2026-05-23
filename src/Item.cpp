@@ -31,7 +31,7 @@ void Character::useHeldItem() {
             break;
         case IT_TurtlePotion:
             setSpeed(getSpeed() -3);
-            setDefense(getDefense() *1.5);
+            setDefense(getDefense() *1.5f);
             break;
         case IT_HealthPotion_II:
             restoreHealth(15.0);
@@ -41,7 +41,7 @@ void Character::useHeldItem() {
             break;
         case IT_TurtlePotion_II:
             setSpeed(getSpeed() -4);
-            setDefense(getDefense() *1.8);
+            setDefense(getDefense() *1.8f);
             break;
         default:
             // shouldnt happen

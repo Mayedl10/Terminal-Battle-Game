@@ -33,7 +33,7 @@ int InputQuery::query() {
     do {
 
         // ConsoleHandler::readIntInRange()
-        idx = ConsoleHandler::readIntInRange(1, options.size());
+        idx = ConsoleHandler::readIntInRange(1, static_cast<int>(options.size()));
 
         if (!options[idx-1].isVisible) {
             std::cout << "Please select a valid option. Some options have been disabled." << std::endl;
