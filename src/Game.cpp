@@ -115,9 +115,9 @@ bool Game::attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<C
 void Game::characterAction(std::unique_ptr<Character>& character, QueryOptionsCharacterAction action) {
     switch (action) {
     case QueryOptionsCharacterAction::ATTACK: {
-            // added scope around attack case to prevent an error
-            // caused by target being accessible from other cases,
-            // even though it might not be initialised there
+            // added scope around attack case to prevent a compile time error
+            // caused by target being accessible from other cases, even though
+            // it might not be initialised there
             auto& target = ConsoleHandler::queryCharacter(characters);
             attemptAttack(character, target);
         }
@@ -125,9 +125,13 @@ void Game::characterAction(std::unique_ptr<Character>& character, QueryOptionsCh
     case QueryOptionsCharacterAction::STATUS:
         // print some information
         // don't put character to the end of the queue!
+        // ^ handled by runGameCycle
+        character->printStatus();
+        ConsoleHandler::pressEnterToContinue();
         break;
     case QueryOptionsCharacterAction::PASS:
         // do nothing
+        // "pass" ... "i'm not doing anything this round"
         break;
     case QueryOptionsCharacterAction::USE_ITEM:
         break;
@@ -361,7 +365,7 @@ void Game::placePlayers() {
 }
 
 Game::Game(const std::string& levelFolderPath, const int characterCount, const int humanCharacterCount) {
-
+    ConsoleHandler::clearScreen();
     // seed random number engine with unix epoch
     rng = std::mt19937(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 

@@ -11,7 +11,7 @@
 void ConsoleHandler::clearScreen() {
     // ANSI escape sequence that clears the screen and then resets the cursor position
     // SHOULD work cross platform, but really depends on the terminal used
-    std::cout << "\033[2J\033[1;1H";
+    std::cout << "\033[2J\033[1;1H" << std::flush;
 
     // gnome-terminal:
     //      works, but you can scroll "up" to before the clear
@@ -69,4 +69,17 @@ std::unique_ptr<Character>& ConsoleHandler::queryCharacter(std::deque<std::uniqu
 
         std::cout << "No living character with that name exists. Please try again." << std::endl;
     }
+}
+
+void ConsoleHandler::pressEnterToContinue() {
+    std::cout << "Press Enter to continue..." << std::flush;
+
+    std::cin.clear();
+    // make sure there isn't some mean leftover newline in the buffer
+    if (std::cin.peek() == '\n') {
+        std::cin.get();
+    }
+
+    std::string dummyBuffer;
+    std::getline(std::cin, dummyBuffer);
 }

@@ -96,6 +96,8 @@ public:
 
     void hurt(float damage);
 
+    void printStatus();
+
     QueryOptionsCharacterAction pickAction();
 
     Character(char name, CharacterClass charClass, bool isHuman);

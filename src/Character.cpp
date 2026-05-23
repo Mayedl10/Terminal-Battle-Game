@@ -3,6 +3,8 @@
 #include "Classes.hpp"
 #include "InputQuery.hpp"
 
+#include <iostream>
+#include <vector>
 #include <cctype>
 
 void Character::setQueryObject(InputQuery& qu) {
@@ -133,6 +135,17 @@ QueryOptionsCharacterAction Character::pickAction() {
 
 QueryOptionsCharacterAction Character::pickActionAI() {
     return QueryOptionsCharacterAction::PASS; // todo
+}
+
+void Character::printStatus() {
+    std::cout << "Status for Character " << getNameUpper() << ":\n"
+    << "\tHealth: " << getHealth() << "HP\n"
+    << "\tStrength: " << getStrength() << "\n"
+    << "\tSpeed/Range: " << getSpeed() << "\n"
+    << "\tPosition: (" << getXpos()+1 << ", " << getYpos()+1 << ")\n"
+    << "\tDefense: " << getDefense() << "\n"
+    << "\tHeld Item: " << "[TODO: implement item printing]"
+    << std::endl;
 }
 
 void Character::initialiseQueryObject() {
