@@ -29,6 +29,11 @@ class Game {
     void characterAction(std::unique_ptr<Character>& character, QueryOptionsCharacterAction action);
     void moveCharacter(std::unique_ptr<Character>& character, QueryOptionsCharacterAction direction, int distance);
 
+    // weights are defined in enum ItemSpawnWeights
+    ItemType getRandomItemFromWeights();
+    // distributes items randomly across the map at the beginning of the game
+    void distributeItems();
+
 public:
 
     // returns false if the game is over

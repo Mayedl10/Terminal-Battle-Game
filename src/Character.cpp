@@ -105,6 +105,10 @@ void Character::hurt(float damage) {
     setHealth(getHealth() - damage);
 }
 
+void Character::restoreHealth(float amount) {
+    setHealth(getHealth() + amount);
+}
+
 void Character::setClassAttributes() {
     switch (charClass) {
     case CharacterClass::CC_Fighter:

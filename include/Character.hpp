@@ -95,10 +95,10 @@ public:
     bool isAlive();
 
     void hurt(float damage);
-
+    void restoreHealth(float amount);
     void printStatus();
-
     QueryOptionsCharacterAction pickAction();
+    void useHeldItem();
 
     Character(char name, CharacterClass charClass, bool isHuman);
 };

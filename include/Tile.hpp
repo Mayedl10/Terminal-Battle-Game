@@ -18,6 +18,18 @@ struct Tile {
     TileType type;
     bool blocksProjectiles, blocksMovement;
     ItemType item;  // IT_None if no item is on tile
+
+    bool allowsItemSpawning() {
+        // block item spawning if item is already there
+        if (item != ItemType::IT_None) {
+            return false;
+        }
+        // only allow spawning on regular terrain
+        if (type == TileType::TT_Regular) {
+            return true;
+        }
+        return false;
+    }
     
     Tile(TileType type, bool blocksProjectiles, bool blocksMovement, ItemType item) :
         type{type},

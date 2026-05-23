@@ -374,6 +374,7 @@ Game::Game(const std::string& levelFolderPath, const int characterCount, const i
 
     selectRandomLevel();
     placePlayers();
+    distributeItems();  // randomly spawn items on regular floor tiles 
 
     /*
     * sort characters by speed
