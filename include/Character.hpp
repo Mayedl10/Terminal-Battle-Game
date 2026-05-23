@@ -91,6 +91,8 @@ public:
 
     bool isHuman();
     void setIsHuman(bool isHuman);
+    
+    bool isAlive();
 
     void hurt(float damage);
 

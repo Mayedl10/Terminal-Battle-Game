@@ -19,6 +19,7 @@
 
 // returns false if the game is over
 bool Game::runGameCycle() {
+    ConsoleHandler::clearScreen();
     int aliveCount = 0;
     for (auto& ch: characters) {
         if (ch->getHealth() > 0.0) {
@@ -26,11 +27,20 @@ bool Game::runGameCycle() {
         }
     }
     // exit if the game is over
-    if (aliveCount < 1) {
+    if (aliveCount < 2) {
         return false;
     }
 
+    if (!(characters.front()->isAlive())) {
+        enqueueFrontCharacter();
+        return true;
+    }
+
     levels[getLevelIdx()]->displayLevel(characters);
+    std::cout << "It's player " << characters.front()->getNameUpper() << "'s turn!" << std::endl;
+    for (auto& p: characters) {
+        std::cout << "\t " << p->getNameUpper() << ": " << p->getHealth() << "HP" << std::endl;
+    }
 
     // query front-of-queue character for an action or make AI decide
     auto choice = characters.front()->pickAction();
@@ -39,7 +49,10 @@ bool Game::runGameCycle() {
     characterAction(characters.front(), choice);
 
     // move front-of-queue character to the back
-    enqueueFrontCharacter();
+    // let character move again if status was queried
+    if (choice != QueryOptionsCharacterAction::STATUS) {
+        enqueueFrontCharacter();
+    }
 
     // no need to check if the game is over, the next cycle deals with that
     return true;
@@ -61,6 +74,8 @@ bool Game::attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<C
     # . . A
     */
 
+    std::cout << attacker->getNameUpper() << " attempted an attack on " << target->getNameUpper() << "!" << std::endl;
+
     std::pair<int, int> attPos = {
         attacker->getXpos(),
         attacker->getYpos()
@@ -72,6 +87,7 @@ bool Game::attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<C
 
     // return false if target is too far away
     if (!MathUtils::pointInRange(attPos, static_cast<double>(attacker->getRange()), tarPos)) {
+        std::cout << "The attack failed because " << target->getNameUpper() << " was too far away." << std::endl;
         return false;
     }
 
@@ -85,6 +101,7 @@ bool Game::attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<C
     // return if any of them are
     for (auto p: line) {
         if (map[p.second][p.first].type == TileType::TT_Wall) {
+            std::cout << "The attack failed because there was a wall in the way." << std::endl;
             return false;
         } 
     }
@@ -97,18 +114,27 @@ bool Game::attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<C
 
 void Game::characterAction(std::unique_ptr<Character>& character, QueryOptionsCharacterAction action) {
     switch (action) {
-    case QueryOptionsCharacterAction::ATTACK:
+    case QueryOptionsCharacterAction::ATTACK: {
+            // added scope around attack case to prevent an error
+            // caused by target being accessible from other cases,
+            // even though it might not be initialised there
+            auto& target = ConsoleHandler::queryCharacter(characters);
+            attemptAttack(character, target);
+        }
         break;
     case QueryOptionsCharacterAction::STATUS:
+        // print some information
+        // don't put character to the end of the queue!
         break;
     case QueryOptionsCharacterAction::PASS:
+        // do nothing
         break;
     case QueryOptionsCharacterAction::USE_ITEM:
         break;
     case QueryOptionsCharacterAction::DROP_ITEM:
         break;
     default: // if it's none of the above, it's probably a direction. if it isn't, let moveCharacter throw an exception
-        // todo: query distance
+        // query distance
         int dist = ConsoleHandler::readIntInRange(1, character->getSpeed());
         moveCharacter(character, action, dist);
         break;

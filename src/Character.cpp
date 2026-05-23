@@ -82,6 +82,10 @@ void Character::setIsHuman(bool isHuman) {
     isHumanPlayer = isHuman;
 }
 
+bool Character::isAlive() {
+    return (getHealth() > 0);
+}
+
 char Character::getName() {
     if (isHuman()) {
         return name;
