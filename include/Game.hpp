@@ -16,12 +16,14 @@ class Game {
     std::vector<std::unique_ptr<Level>> levels;
     int levelIdx;   // index for current level
     std::mt19937 rng;
-
+    
     void loadLevels(const std::string& levelFolderPath);
     void loadPlayers(const int characterCount, const int humanCharacterCount);
     void selectRandomLevel();
     void placePlayers();
     void enqueueFrontCharacter(); // moves the character at the front of the player deque to the back
+    
+    std::unique_ptr<Level>& getLevel();
 
     // returns false if the attack failed
     // if it succeeds, the function applies damage automatically
@@ -33,6 +35,7 @@ class Game {
     ItemType getRandomItemFromWeights();
     // distributes items randomly across the map at the beginning of the game
     void distributeItems();
+
 
 public:
 

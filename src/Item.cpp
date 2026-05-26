@@ -50,7 +50,8 @@ void Character::useHeldItem() {
     }
 }
 
-bool Character::attemptPickup(Tile& tile) {
+bool Character::attemptPickup(std::unique_ptr<Level>& level) {
+    auto& tile = level->getTileAt(getXpos(), getYpos());
     // if ch has no item and floor has an item
     if (heldItem == ItemType::IT_None && tile.item != ItemType::IT_None) {
         heldItem = tile.item;
@@ -93,7 +94,7 @@ ItemType Game::getRandomItemFromWeights() {
 }
 
 void Game::distributeItems() {
-    auto& map = levels[getLevelIdx()]->getMap();
+    auto& map = getLevel()->getMap();
     // note to self:
     // map is a REFERENCE to the actual level data!
     // changes to said level data are made DIRECTLY!

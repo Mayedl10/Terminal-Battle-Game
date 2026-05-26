@@ -1,10 +1,11 @@
 #pragma once
 
 #include <array>
+#include <memory>
 
 #include "Item.hpp"
 #include "InputQuery.hpp"
-#include "Tile.hpp"
+#include "Level.hpp"
 
 struct CharacterAttributes {
     int speed;
@@ -100,7 +101,7 @@ public:
     void printStatus();
     QueryOptionsCharacterAction pickAction();
     void useHeldItem();
-    bool attemptPickup(Tile& tile);
+    bool attemptPickup(std::unique_ptr<Level>& level);
 
     Character(char name, CharacterClass charClass, bool isHuman);
 };

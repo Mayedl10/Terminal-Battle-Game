@@ -90,6 +90,10 @@ TileType Level::getTileTypeAt(int x, int y) {
     return map[y][x].type;
 }
 
+Tile& Level::getTileAt(int x, int y) {
+    return map[y][x];
+}
+
 int Level::getWidth() {
     if (map.size() == 0) {
         return 0;

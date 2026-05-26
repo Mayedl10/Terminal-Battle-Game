@@ -6,7 +6,8 @@
 #include <deque>
 
 #include "Tile.hpp"
-#include "Character.hpp"
+
+class Character;
 
 constexpr std::string_view levelFileExtension = ".dat";
 
@@ -23,6 +24,7 @@ public:
 
     void displayLevel(std::deque<std::unique_ptr<Character>>& players);
     TileType getTileTypeAt(int x, int y);
+    Tile& getTileAt(int x, int y);
     int getWidth();
     int getHeight();
 

@@ -36,7 +36,7 @@ bool Game::runGameCycle() {
         return true;
     }
 
-    levels[getLevelIdx()]->displayLevel(characters);
+    getLevel()->displayLevel(characters);
     std::cout << "It's player " << characters.front()->getNameUpper() << "'s turn!" << std::endl;
     for (auto& p: characters) {
         std::cout << "\t " << p->getNameUpper() << ": " << p->getHealth() << "HP" << std::endl;
@@ -51,10 +51,7 @@ bool Game::runGameCycle() {
     // pick up items
     for (auto& ch: characters) {
         // the variable "pickup" is only used to make the code more "readable"
-        bool pickup = ch->attemptPickup(
-            levels[getLevelIdx()]->getMap() // tile[][]
-            [ch->getYpos()][ch->getXpos()]  // tile
-        );
+        bool pickup = ch->attemptPickup(getLevel());
         if (pickup) {
             std::cout << "Player " << ch->getNameUpper() << " picked up an item!" << std::endl;
             ConsoleHandler::pressEnterToContinue();
@@ -107,7 +104,7 @@ bool Game::attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<C
     // if target is in range, perform raymarching to see if there is a wall obstructing the path.
     // use Bresenham's line algorithm
 
-    auto& map = levels[getLevelIdx()]->getMap();
+    auto& map = getLevel()->getMap();
     auto line = MathUtils::bresenhamsLineAlgorithm(attPos, tarPos);
 
     // check if any of the bresenham line points are walls
@@ -167,7 +164,7 @@ void Game::moveCharacter(std::unique_ptr<Character>& character, QueryOptionsChar
         );
     }
     
-    auto& level = levels[getLevelIdx()];
+    auto& level = getLevel();
 
     switch (direction) {
     case QueryOptionsCharacterAction::MOVE_N:
@@ -249,6 +246,10 @@ void Game::moveCharacter(std::unique_ptr<Character>& character, QueryOptionsChar
 void Game::enqueueFrontCharacter() {
     characters.emplace_back(std::move(characters.front()));
     characters.pop_front();
+}
+
+std::unique_ptr<Level>& Game::getLevel() {
+    return levels[getLevelIdx()];
 }
 
 std::mt19937& Game::getRNG() {
@@ -355,7 +356,7 @@ void Game::selectRandomLevel() {
 
 void Game::placePlayers() {
     std::vector<std::pair<int, int>> validPositions;
-    auto& map = levels[getLevelIdx()]->getMap();
+    auto& map = getLevel()->getMap();
 
     for (int i = 0; i < static_cast<int>(map.size()); i++) {
         for (int j = 0; j < static_cast<int>(map[i].size()); j++) {
