@@ -48,6 +48,19 @@ bool Game::runGameCycle() {
     // todo: actually execute actions
     characterAction(characters.front(), choice);
 
+    // pick up items
+    for (auto& ch: characters) {
+        // the variable "pickup" is only used to make the code more "readable"
+        bool pickup = ch->attemptPickup(
+            levels[getLevelIdx()]->getMap() // tile[][]
+            [ch->getYpos()][ch->getXpos()]  // tile
+        );
+        if (pickup) {
+            std::cout << "Player " << ch->getNameUpper() << " picked up an item!" << std::endl;
+            ConsoleHandler::pressEnterToContinue();
+        }
+    }
+
     // move front-of-queue character to the back
     // let character move again if status was queried
     if (choice != QueryOptionsCharacterAction::STATUS) {

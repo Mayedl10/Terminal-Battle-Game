@@ -148,7 +148,7 @@ void Character::printStatus() {
     << "\tSpeed/Range: " << getSpeed() << "\n"
     << "\tPosition: (" << getXpos()+1 << ", " << getYpos()+1 << ")\n"
     << "\tDefense: " << getDefense() << "\n"
-    << "\tHeld Item: " << "[TODO: implement item printing]"
+    << "\tHeld Item: " << static_cast<int>(heldItem) << " [TODO: implement proper item printing]"
     << std::endl;
 }
 

@@ -50,6 +50,18 @@ void Character::useHeldItem() {
     }
 }
 
+bool Character::attemptPickup(Tile& tile) {
+    // if ch has no item and floor has an item
+    if (heldItem == ItemType::IT_None && tile.item != ItemType::IT_None) {
+        heldItem = tile.item;
+        tile.item = IT_None;
+        return true;
+    }
+    // if ch already has an item or """floor is empty"""
+    return false;
+}
+
+
 ItemType Game::getRandomItemFromWeights() {    
     // static because these thigns aren't gonna change with every function call
     static constexpr std::array<ItemType, 7> items = {

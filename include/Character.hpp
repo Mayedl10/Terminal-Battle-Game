@@ -4,6 +4,7 @@
 
 #include "Item.hpp"
 #include "InputQuery.hpp"
+#include "Tile.hpp"
 
 struct CharacterAttributes {
     int speed;
@@ -99,6 +100,7 @@ public:
     void printStatus();
     QueryOptionsCharacterAction pickAction();
     void useHeldItem();
+    bool attemptPickup(Tile& tile);
 
     Character(char name, CharacterClass charClass, bool isHuman);
 };
