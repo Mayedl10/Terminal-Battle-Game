@@ -48,5 +48,4 @@ public:
     * characters are sorted according to their speed; they then get to take action in order until the game ends
     */
     Game(const std::string& levelFolderPath, const int characterCount, const int AIcharacterCount);
-    ~Game();
 };

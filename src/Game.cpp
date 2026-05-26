@@ -390,8 +390,3 @@ Game::Game(const std::string& levelFolderPath, const int characterCount, const i
     );
 
 }
-
-Game::~Game() {
-
-    // TODO
-}
