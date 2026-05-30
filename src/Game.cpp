@@ -19,6 +19,8 @@
 
 // returns false if the game is over
 bool Game::runGameCycle() {
+    auto& current = characters.front();
+
     ConsoleHandler::clearScreen();
     int aliveCount = 0;
     for (auto& ch: characters) {
@@ -31,22 +33,25 @@ bool Game::runGameCycle() {
         return false;
     }
 
-    if (!(characters.front()->isAlive())) {
+    if (!(current->isAlive())) {
         enqueueFrontCharacter();
         return true;
     }
 
     getLevel()->displayLevel(characters);
-    std::cout << "It's player " << characters.front()->getNameUpper() << "'s turn!" << std::endl;
+    std::cout << "It's player " << current->getNameUpper() << "'s turn!" << std::endl;
     for (auto& p: characters) {
         std::cout << "\t " << p->getNameUpper() << ": " << p->getHealth() << "HP" << std::endl;
     }
 
-    // query front-of-queue character for an action or make AI decide
-    auto choice = characters.front()->pickAction();
+    // hide/show "use item" actions
+    current->getQueryObject().setVisibility(QueryOptionsCharacterAction::USE_ITEM, current->hasItem());
 
-    // todo: actually execute actions
-    characterAction(characters.front(), choice);
+    // query front-of-queue character for an action or make AI decide
+    auto choice = current->pickAction();
+
+    // execute actions
+    characterAction(current, choice);
 
     // pick up items
     for (auto& ch: characters) {
@@ -144,8 +149,9 @@ void Game::characterAction(std::unique_ptr<Character>& character, QueryOptionsCh
         // "pass" ... "i'm not doing anything this round"
         break;
     case QueryOptionsCharacterAction::USE_ITEM:
-        break;
-    case QueryOptionsCharacterAction::DROP_ITEM:
+        std::cout << "Player " << character->getNameUpper() << " used an item: [todo - implement proper item printing]" << std::endl;
+        character->useHeldItem();
+        ConsoleHandler::pressEnterToContinue();
         break;
     default: // if it's none of the above, it's probably a direction. if it isn't, let moveCharacter throw an exception
         // query distance

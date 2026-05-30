@@ -48,12 +48,18 @@ void Character::useHeldItem() {
             throw std::runtime_error("Character::useHeldItem: encountered character with unknown held item type: " + std::to_string(heldItem) + ". Character: " + getName());
             break;
     }
+    heldItem = ItemType::IT_None;
+}
+
+bool Character::hasItem() {
+    // invalid item is treated as an item
+    return (heldItem != ItemType::IT_None);
 }
 
 bool Character::attemptPickup(std::unique_ptr<Level>& level) {
     auto& tile = level->getTileAt(getXpos(), getYpos());
     // if ch has no item and floor has an item
-    if (heldItem == ItemType::IT_None && tile.item != ItemType::IT_None) {
+    if (!hasItem() && tile.item != ItemType::IT_None) {
         heldItem = tile.item;
         tile.item = IT_None;
         return true;
@@ -61,7 +67,6 @@ bool Character::attemptPickup(std::unique_ptr<Level>& level) {
     // if ch already has an item or """floor is empty"""
     return false;
 }
-
 
 ItemType Game::getRandomItemFromWeights() {    
     // static because these thigns aren't gonna change with every function call

@@ -33,8 +33,7 @@ enum QueryOptionsCharacterAction :int {
     ATTACK,
     STATUS,
     PASS,
-    USE_ITEM,
-    DROP_ITEM
+    USE_ITEM
 };
 
 class Character {
@@ -95,11 +94,13 @@ public:
     void setIsHuman(bool isHuman);
     
     bool isAlive();
-
+    bool hasItem();
+    
     void hurt(float damage);
     void restoreHealth(float amount);
     void printStatus();
     QueryOptionsCharacterAction pickAction();
+    
     void useHeldItem();
     bool attemptPickup(std::unique_ptr<Level>& level);
 

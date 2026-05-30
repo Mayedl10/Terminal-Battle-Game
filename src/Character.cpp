@@ -162,8 +162,7 @@ void Character::initialiseQueryObject() {
         {"Attack", true, QueryOptionsCharacterAction::ATTACK},
         {"Get Status", true, QueryOptionsCharacterAction::STATUS},
         {"Do Nothing", true, QueryOptionsCharacterAction::PASS},
-        {"Use Item", false, QueryOptionsCharacterAction::USE_ITEM},    // hidden when character doesn't have an item
-        {"Drop Item", false, QueryOptionsCharacterAction::DROP_ITEM}    // ^
+        {"Use Item", false, QueryOptionsCharacterAction::USE_ITEM}     // hidden when character doesn't have an item
     });
 }
 
