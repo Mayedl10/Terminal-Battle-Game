@@ -26,6 +26,12 @@ int Character::getSpeed() {
 
 void Character::setSpeed(int newSpeed) {
     attributes.speed = newSpeed;
+    if (attributes.speed < CharacterAttributes::minSpeed) {
+        attributes.speed = CharacterAttributes::minSpeed;
+    }
+    if (attributes.speed > CharacterAttributes::maxSpeed) {
+        attributes.speed = CharacterAttributes::maxSpeed;
+    }
 }
 
 int Character::getRange() {
@@ -34,6 +40,12 @@ int Character::getRange() {
 
 void Character::setRange(int newRange) {
     attributes.range = newRange;
+    if (attributes.range < CharacterAttributes::minRange) {
+        attributes.range = CharacterAttributes::minRange;
+    }
+    if (attributes.range > CharacterAttributes::maxRange) {
+        attributes.range = CharacterAttributes::maxRange;
+    }
 }
 
 float Character::getStrength() {
@@ -42,6 +54,12 @@ float Character::getStrength() {
 
 void Character::setStrength(float newStrength) {
     attributes.strength = newStrength;
+    if (attributes.strength < CharacterAttributes::minStrength) {
+        attributes.strength = CharacterAttributes::minStrength;
+    }
+    if (attributes.strength > CharacterAttributes::maxStrength) {
+        attributes.strength = CharacterAttributes::maxStrength;
+    }
 }
 
 float Character::getDefense() {
@@ -50,6 +68,13 @@ float Character::getDefense() {
 
 void Character::setDefense(float newDefense) {
     attributes.defense = newDefense;
+    // comparison operators are swapped here because min>max (defense is a factor on damage taken)
+    if (attributes.defense > CharacterAttributes::minDefense) {
+        attributes.defense = CharacterAttributes::minDefense;
+    }
+    if (attributes.defense < CharacterAttributes::maxDefense) {
+        attributes.defense = CharacterAttributes::maxDefense;
+    }
 }
 
 float Character::getHealth() {
