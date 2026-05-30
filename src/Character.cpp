@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <cctype>
+#include <random>
 
 void Character::setQueryObject(InputQuery& qu) {
     queryObject = qu;
@@ -101,7 +102,7 @@ void Character::setYpos(int newYpos) {
     ypos = newYpos;
 }
 
-bool Character::isHuman() {
+bool Character::isHuman() const {
     return isHumanPlayer;
 }
 
@@ -113,7 +114,7 @@ bool Character::isAlive() {
     return (getHealth() > 0);
 }
 
-char Character::getName() {
+char Character::getName() const {
     if (isHuman()) {
         return name;
     } else {
@@ -122,7 +123,7 @@ char Character::getName() {
     }
 }
 
-char Character::getNameUpper() {
+char Character::getNameUpper() const {
     return name;
 }
 
@@ -155,15 +156,7 @@ void Character::setClassAttributes() {
 }
 
 QueryOptionsCharacterAction Character::pickAction() {
-    if (!isHuman()) {
-        return pickActionAI();
-    }
-
     return static_cast<QueryOptionsCharacterAction>(queryObject.query());
-}
-
-QueryOptionsCharacterAction Character::pickActionAI() {
-    return QueryOptionsCharacterAction::PASS; // todo
 }
 
 void Character::printStatus() {

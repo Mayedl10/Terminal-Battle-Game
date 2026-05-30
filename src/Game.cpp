@@ -7,6 +7,9 @@
 #include <algorithm>
 #include <utility>
 #include <cmath>
+#include <optional>
+#include <variant>
+#include <float.h>
 
 #include "Game.hpp"
 #include "Character.hpp"
@@ -16,6 +19,7 @@
 #include "InputQuery.hpp"
 #include "MathUtils.hpp"
 #include "ConsoleHandler.hpp"
+
 
 // returns false if the game is over
 bool Game::runGameCycle() {
@@ -47,11 +51,28 @@ bool Game::runGameCycle() {
     // hide/show "use item" actions
     current->getQueryObject().setVisibility(QueryOptionsCharacterAction::USE_ITEM, current->hasItem());
 
+    // the following two if statements could be merged into one, but the
+    // current structure makes the control flow easier to understand
+
     // query front-of-queue character for an action or make AI decide
-    auto choice = current->pickAction();
+    QueryOptionsCharacterAction choice;
+    std::optional<std::variant<Character*, int>> secondAIParameter;
+    
+    if (current->isHuman()) {
+        choice = current->pickAction();
+    } else {
+        auto aiChoice = pickActionAI();
+        choice = aiChoice.first;
+        secondAIParameter = aiChoice.second;
+    }
 
     // execute actions
-    characterAction(current, choice);
+    if (current->isHuman()) {
+        characterAction(current, choice);
+    } else {
+        aiCharacterAction(current, choice, secondAIParameter);
+        ConsoleHandler::pressEnterToContinue();
+    }
 
     // pick up items
     for (auto& ch: characters) {
@@ -74,6 +95,11 @@ bool Game::runGameCycle() {
 }
 
 bool Game::attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<Character>& target) {
+    return attemptAttack(attacker.get(), target.get());
+}
+
+// added overload to get rid of a headache somewhere else in the code
+bool Game::attemptAttack(Character* attacker, Character* target) {
     // note: the following setup would return true (walls aren't connected diagonally)
     /*
     B . . #
@@ -134,7 +160,7 @@ void Game::characterAction(std::unique_ptr<Character>& character, QueryOptionsCh
             // caused by target being accessible from other cases, even though
             // it might not be initialised there
             auto& target = ConsoleHandler::queryCharacter(characters);
-            attemptAttack(character, target);
+            (void)attemptAttack(character, target);
         }
         break;
     case QueryOptionsCharacterAction::STATUS:
@@ -159,6 +185,31 @@ void Game::characterAction(std::unique_ptr<Character>& character, QueryOptionsCh
         moveCharacter(character, action, dist);
         break;
     }
+}
+
+std::unique_ptr<Character>& Game::getClosestCharacterInRange(std::unique_ptr<Character>& character) {
+    float closestDist = MAXFLOAT;
+    std::unique_ptr<Character>* ret = &character;
+
+    for (auto& ch: characters) {
+        // pointDistance is used instead of pointInRange, because the distance is needed in multiple checks
+        float distance = MathUtils::pointDistance(
+            {ch->getXpos(), ch->getYpos()},
+            {character->getXpos(), character->getYpos()}
+        );
+        if (
+            !(ch == character) // overloaded == on Character
+            &&
+            distance <= static_cast<float>(character->getRange())
+            &&
+            distance < closestDist
+        ) {
+            closestDist = distance;
+            ret = &ch;
+        }
+    }
+
+    return *ret;
 }
 
 void Game::moveCharacter(std::unique_ptr<Character>& character, QueryOptionsCharacterAction direction, int distance) {
@@ -384,13 +435,13 @@ void Game::placePlayers() {
     }
 }
 
-Game::Game(const std::string& levelFolderPath, const int characterCount, const int humanCharacterCount) {
+Game::Game(const std::string& levelFolderPath, const int characterCount, const int AIcharacterCount) {
     ConsoleHandler::clearScreen();
     // seed random number engine with unix epoch
     rng = std::mt19937(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 
     loadLevels(levelFolderPath);
-    loadPlayers(characterCount, humanCharacterCount);
+    loadPlayers(characterCount, AIcharacterCount);
 
     selectRandomLevel();
     placePlayers();

@@ -65,3 +65,10 @@ std::vector<std::pair<int, int>> MathUtils::bresenhamsLineAlgorithm(std::pair<in
         }
     }
 }
+
+float MathUtils::pointDistance(std::pair<int, int> A, std::pair<int, int> B) {
+    int dx = B.first - A.first;
+    int dy = B.second - A.second;
+
+    return std::sqrt(static_cast<float>(dx * dx + dy * dy));
+}

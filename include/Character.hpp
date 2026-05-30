@@ -2,6 +2,7 @@
 
 #include <array>
 #include <memory>
+#include <random>
 
 #include "Item.hpp"
 #include "InputQuery.hpp"
@@ -64,8 +65,6 @@ class Character {
 
     void initialiseQueryObject();
 
-    QueryOptionsCharacterAction pickActionAI();
-
 public:
 
     static inline const std::array<CharacterClass, 4> validClasses = {
@@ -77,8 +76,8 @@ public:
 
     InputQuery& getQueryObject();
 
-    char getName();
-    char getNameUpper();
+    char getName() const;
+    char getNameUpper() const;
 
     int getSpeed();
     void setSpeed(int newSpeed);
@@ -101,7 +100,7 @@ public:
     int getYpos();
     void setYpos(int newYpos);
 
-    bool isHuman();
+    bool isHuman() const;
     void setIsHuman(bool isHuman);
     
     bool isAlive();
@@ -114,6 +113,10 @@ public:
     
     void useHeldItem();
     bool attemptPickup(std::unique_ptr<Level>& level);
+
+    bool operator==(const Character& other) const {
+        return other.getNameUpper() == getNameUpper();
+    }
 
     Character(char name, CharacterClass charClass, bool isHuman);
 };
