@@ -25,7 +25,6 @@ struct CharacterAttributes {
     float strength;
     float defense;  // gets multiplied with damage; range 0.0f~1.0f
     float health;   // range 0.0f~100.0f
-    bool hasMagic;
 };
 
 

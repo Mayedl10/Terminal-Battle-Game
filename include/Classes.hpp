@@ -20,9 +20,7 @@ struct CharacterClasses {
         // float defense;  // gets multiplied with damage; range 0.0f~1.0f
         0.4f,
         // float health;   // range 0.0f~100.0f
-        50.0f,
-        // bool hasMagic;
-        false
+        50.0f
     };
 
     inline static const CharacterAttributes rangerAttr {
@@ -35,9 +33,7 @@ struct CharacterClasses {
         // float defense;  // gets multiplied with damage; range 0.0f~1.0f
         0.6f,
         // float health;   // range 0.0f~100.0f
-        40.0f,
-        // bool hasMagic;
-        false
+        40.0f
     };
 
     inline static const CharacterAttributes mageAttr {
@@ -50,9 +46,7 @@ struct CharacterClasses {
         // float defense;  // gets multiplied with damage; range 0.0f~1.0f
         1.0f,
         // float health;   // range 0.0f~100.0f
-        30.0f,
-        // bool hasMagic;
-        true
+        30.0f
     };
 
     inline static const CharacterAttributes rogueAttr {
@@ -65,9 +59,7 @@ struct CharacterClasses {
         // float defense;  // gets multiplied with damage; range 0.0f~1.0f
         0.4f,
         // float health;   // range 0.0f~100.0f
-        40.0f,
-        // bool hasMagic;
-        false
+        40.0f
     };
 
     inline static const CharacterAttributes invalidAttr {
@@ -80,9 +72,7 @@ struct CharacterClasses {
         // float defense;  // gets multiplied with damage; range 0.0f~1.0f
         0.0f,
         // float health;   // range 0.0f~100.0f
-        0.0f,
-        // bool hasMagic;
-        false
+        0.0f
     };
 
 };
