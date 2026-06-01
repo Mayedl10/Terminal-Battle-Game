@@ -52,10 +52,11 @@ std::pair<QueryOptionsCharacterAction, int> Game::aiPickMovement() {
     }; 
 
     std::uniform_int_distribution<size_t> directionDist(0, directions.size()-1);
+    std::uniform_int_distribution<int> speedDist(CharacterAttributes::minSpeed, current->getSpeed());
 
     return {
         directions[directionDist(getRNG())],
-        current->getSpeed()
+        speedDist(getRNG())
     };
 }
 
