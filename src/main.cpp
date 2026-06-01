@@ -14,12 +14,6 @@ int main(int argc, char **argv) {
 
     Game test("./data/levels/", 2, 1);
 
-    ConsoleHandler::pressEnterToContinue();
-    ConsoleHandler::pressEnterToContinue();
-    ConsoleHandler::pressEnterToContinue();
-    ConsoleHandler::pressEnterToContinue();
-    ConsoleHandler::pressEnterToContinue();
-    
     try {
         while (test.runGameCycle()) { }
     }
