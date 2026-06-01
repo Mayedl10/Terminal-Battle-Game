@@ -74,11 +74,8 @@ Character* ConsoleHandler::queryCharacter(std::deque<std::unique_ptr<Character>>
 void ConsoleHandler::pressEnterToContinue() {
     std::cout << "Press Enter to continue..." << std::flush;
 
-    std::cin.clear();
-    // make sure there isn't some mean leftover newline in the buffer
-    if (std::cin.peek() == '\n') {
-        std::cin.get();
-    }
+    std::cin.clear();    
+    std::cin.ignore(std::cin.rdbuf()->in_avail());
 
     std::string dummyBuffer;
     std::getline(std::cin, dummyBuffer);
