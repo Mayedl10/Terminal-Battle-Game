@@ -112,7 +112,7 @@ public:
     QueryOptionsCharacterAction pickAction();
     
     void useHeldItem();
-    bool attemptPickup(std::unique_ptr<Level>& level);
+    bool attemptPickup(Level *level);
 
     bool operator==(const Character& other) const {
         return other.getNameUpper() == getNameUpper();

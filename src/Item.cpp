@@ -56,7 +56,7 @@ bool Character::hasItem() {
     return (heldItem != ItemType::IT_None);
 }
 
-bool Character::attemptPickup(std::unique_ptr<Level>& level) {
+bool Character::attemptPickup(Level *level) {
     auto& tile = level->getTileAt(getXpos(), getYpos());
     // if ch has no item and floor has an item
     if (!hasItem() && tile.item != ItemType::IT_None) {

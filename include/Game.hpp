@@ -25,14 +25,13 @@ class Game {
     void placePlayers();
     void enqueueFrontCharacter(); // moves the character at the front of the player deque to the back
     
-    std::unique_ptr<Level>& getLevel();
+    Level* getLevel();
 
     // returns false if the attack failed
     // if it succeeds, the function applies damage automatically
-    bool attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<Character>& target);
-    bool attemptAttack(Character* attacker, Character* target);
-    void characterAction(std::unique_ptr<Character>& character, QueryOptionsCharacterAction action);
-    void moveCharacter(std::unique_ptr<Character>& character, QueryOptionsCharacterAction direction, int distance);
+    bool attemptAttack(Character *attacker, Character *target);
+    void characterAction(Character *character, QueryOptionsCharacterAction action);
+    void moveCharacter(Character *character, QueryOptionsCharacterAction direction, int distance);
 
     // weights are defined in enum ItemSpawnWeights
     ItemType getRandomItemFromWeights();
@@ -40,9 +39,9 @@ class Game {
     void distributeItems();
 
     std::pair<QueryOptionsCharacterAction, std::optional<std::variant<Character*, int>>> pickActionAI();
-    std::unique_ptr<Character>& getClosestCharacterInRange(std::unique_ptr<Character>& character); // returns reference to the character itself if no other character is in range
+    Character* getClosestCharacterInRange(Character* character); // returns reference to the character itself if no other character is in range
     std::pair<QueryOptionsCharacterAction, int> aiPickMovement();
-    void aiCharacterAction(std::unique_ptr<Character>& character, QueryOptionsCharacterAction action, std::optional<std::variant<Character*, int>> aiParameter);
+    void aiCharacterAction(Character* character, QueryOptionsCharacterAction action, std::optional<std::variant<Character*, int>> aiParameter);
 
 public:
 

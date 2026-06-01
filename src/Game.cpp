@@ -23,7 +23,7 @@
 
 // returns false if the game is over
 bool Game::runGameCycle() {
-    auto& current = characters.front();
+    Character *current = characters.front().get();
 
     ConsoleHandler::clearScreen();
     int aliveCount = 0;
@@ -94,11 +94,6 @@ bool Game::runGameCycle() {
     return true;
 }
 
-bool Game::attemptAttack(std::unique_ptr<Character>& attacker, std::unique_ptr<Character>& target) {
-    return attemptAttack(attacker.get(), target.get());
-}
-
-// added overload to get rid of a headache somewhere else in the code
 bool Game::attemptAttack(Character* attacker, Character* target) {
     // note: the following setup would return true (walls aren't connected diagonally)
     /*
@@ -153,13 +148,13 @@ bool Game::attemptAttack(Character* attacker, Character* target) {
     return true;
 }
 
-void Game::characterAction(std::unique_ptr<Character>& character, QueryOptionsCharacterAction action) {
+void Game::characterAction(Character *character, QueryOptionsCharacterAction action) {
     switch (action) {
     case QueryOptionsCharacterAction::ATTACK: {
             // added scope around attack case to prevent a compile time error
             // caused by target being accessible from other cases, even though
             // it might not be initialised there
-            auto& target = ConsoleHandler::queryCharacter(characters);
+            Character *target = ConsoleHandler::queryCharacter(characters);
             (void)attemptAttack(character, target);
         }
         break;
@@ -187,9 +182,9 @@ void Game::characterAction(std::unique_ptr<Character>& character, QueryOptionsCh
     }
 }
 
-std::unique_ptr<Character>& Game::getClosestCharacterInRange(std::unique_ptr<Character>& character) {
+Character* Game::getClosestCharacterInRange(Character *character) {
     float closestDist = MAXFLOAT;
-    std::unique_ptr<Character>* ret = &character;
+    Character *ret = character;
 
     for (auto& ch: characters) {
         // pointDistance is used instead of pointInRange, because the distance is needed in multiple checks
@@ -198,21 +193,21 @@ std::unique_ptr<Character>& Game::getClosestCharacterInRange(std::unique_ptr<Cha
             {character->getXpos(), character->getYpos()}
         );
         if (
-            !(ch == character) // overloaded == on Character
+            !(*ch == *character) // overloaded == on Character
             &&
             distance <= static_cast<float>(character->getRange())
             &&
             distance < closestDist
         ) {
             closestDist = distance;
-            ret = &ch;
+            ret = ch.get();
         }
     }
 
-    return *ret;
+    return ret;
 }
 
-void Game::moveCharacter(std::unique_ptr<Character>& character, QueryOptionsCharacterAction direction, int distance) {
+void Game::moveCharacter(Character *character, QueryOptionsCharacterAction direction, int distance) {
     if (distance <= 0 || distance > character->getSpeed()) {
         throw std::invalid_argument(
             "Game::moveCharacter: invalid argument <distance>: " + std::to_string(distance)
@@ -221,7 +216,7 @@ void Game::moveCharacter(std::unique_ptr<Character>& character, QueryOptionsChar
         );
     }
     
-    auto& level = getLevel();
+    Level *level = getLevel();
 
     switch (direction) {
     case QueryOptionsCharacterAction::MOVE_N:
@@ -305,8 +300,8 @@ void Game::enqueueFrontCharacter() {
     characters.pop_front();
 }
 
-std::unique_ptr<Level>& Game::getLevel() {
-    return levels[getLevelIdx()];
+Level* Game::getLevel() {
+    return levels[getLevelIdx()].get();
 }
 
 std::mt19937& Game::getRNG() {

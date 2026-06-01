@@ -41,7 +41,7 @@ int ConsoleHandler::readIntInRange(int lower, int upper) {
     }
 }
 
-std::unique_ptr<Character>& ConsoleHandler::queryCharacter(std::deque<std::unique_ptr<Character>>& characters) {
+Character* ConsoleHandler::queryCharacter(std::deque<std::unique_ptr<Character>>& characters) {
     while (true) {
         std::cout << "> ";
 
@@ -63,7 +63,7 @@ std::unique_ptr<Character>& ConsoleHandler::queryCharacter(std::deque<std::uniqu
 
         for (auto& character: characters) {
             if (character && character->isAlive() && character->getNameUpper() == selectedName) {
-                return character;
+                return character.get();
             }
         }
 

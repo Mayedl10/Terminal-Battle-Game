@@ -11,7 +11,7 @@
 std::pair<QueryOptionsCharacterAction, std::optional<std::variant<Character*, int>>> Game::pickActionAI() {
     std::uniform_real_distribution<float> dist(0.0f, 1.0f);
     
-    auto& current = characters.front();
+    Character *current = characters.front().get();
 
     // if ai has an item, 50% chance it is used
     if (current->hasItem() && dist(rng) > 0.5f) {
@@ -19,10 +19,10 @@ std::pair<QueryOptionsCharacterAction, std::optional<std::variant<Character*, in
     }
 
     // is there a character in range?
-    auto& closest = getClosestCharacterInRange(current);
+    Character *closest = getClosestCharacterInRange(current);
     
     // if no, return some movement thing
-    if (closest == current) {
+    if (*closest == *current) {
         auto movement = aiPickMovement();
         return {
             movement.first,
@@ -33,7 +33,7 @@ std::pair<QueryOptionsCharacterAction, std::optional<std::variant<Character*, in
     // if yes, return attack
     return {
         QueryOptionsCharacterAction::ATTACK,
-        closest.get()
+        closest
     };
     
     // fallback
@@ -41,7 +41,7 @@ std::pair<QueryOptionsCharacterAction, std::optional<std::variant<Character*, in
 }
 
 std::pair<QueryOptionsCharacterAction, int> Game::aiPickMovement() {
-    auto& current = characters.front();
+    Character *current = characters.front().get();
 
     // move in a random direction, the AI doesn't have to be very "I", after all
     static constexpr std::array<QueryOptionsCharacterAction, 4> directions = {
@@ -60,7 +60,7 @@ std::pair<QueryOptionsCharacterAction, int> Game::aiPickMovement() {
 }
 
 // this entire function is a MESS because i designed these systems to work for humans first and foremost
-void Game::aiCharacterAction(std::unique_ptr<Character>& character, QueryOptionsCharacterAction action, std::optional<std::variant<Character*, int>> aiParameter) {
+void Game::aiCharacterAction(Character *character, QueryOptionsCharacterAction action, std::optional<std::variant<Character*, int>> aiParameter) {
     switch (action) {
     case QueryOptionsCharacterAction::ATTACK: 
         if (!aiParameter) {
@@ -73,7 +73,7 @@ void Game::aiCharacterAction(std::unique_ptr<Character>& character, QueryOptions
 
         
         (void)attemptAttack(
-            character.get(),
+            character,
             std::get<Character*>(aiParameter.value())
         );
     

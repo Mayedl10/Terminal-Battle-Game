@@ -14,7 +14,7 @@ public:
 
     static int readIntInRange(int lower, int upper);
 
-    static std::unique_ptr<Character>& queryCharacter(std::deque<std::unique_ptr<Character>>& characters);
+    static Character* queryCharacter(std::deque<std::unique_ptr<Character>>& characters);
 
     static void pressEnterToContinue();
 
