@@ -14,7 +14,7 @@ struct CharacterClasses {
         // int speed;
         4,
         // int range;
-        1,
+        2,
         // float strength;
         5.0f,
         // float defense;  // gets multiplied with damage; range 0.0f~1.0f
@@ -53,7 +53,7 @@ struct CharacterClasses {
         // int speed;
         5,
         // int range;
-        2,
+        3,
         // float strength;
         4.0f,
         // float defense;  // gets multiplied with damage; range 0.0f~1.0f
