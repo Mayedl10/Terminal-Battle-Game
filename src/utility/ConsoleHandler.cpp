@@ -88,7 +88,7 @@ void ConsoleHandler::printAndWait(std::string_view message, int ms) {
     std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 }
 
-void ConsoleHandler::slowPrint(std::string_view message, int ms, char end='\n') {
+void ConsoleHandler::slowPrint(std::string_view message, int ms, char end) {
     for (char c: message) {
         std::cout << c << std::flush;
         std::this_thread::sleep_for(std::chrono::milliseconds(ms));
@@ -98,7 +98,7 @@ void ConsoleHandler::slowPrint(std::string_view message, int ms, char end='\n') 
     }
 }
 
-void ConsoleHandler::slowPrintAndWait(std::string_view message, int ms_interval, int ms_waitTime, char end='\n') {
+void ConsoleHandler::slowPrintAndWait(std::string_view message, int ms_interval, int ms_waitTime, char end) {
     slowPrint(message, ms_interval, end);
     std::this_thread::sleep_for(std::chrono::milliseconds(ms_waitTime));
 }
