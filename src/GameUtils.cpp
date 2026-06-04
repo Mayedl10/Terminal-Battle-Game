@@ -2,6 +2,7 @@
 #include <memory>
 #include <random>
 #include <float.h>
+#include <stdexcept>
 
 #include "Game.hpp"
 #include "MathUtils.hpp"
@@ -11,8 +12,13 @@
 
 // move a character to the back of the queue
 void Game::enqueueFrontCharacter() {
-    characters.emplace_back(std::move(characters.front()));
+    if (characters.empty()) {
+        throw std::runtime_error("Game::enqueueFrontCharacter: cannot enqueue front of an empty std::deque");
+    }
+
+    auto front = std::move(characters.front());
     characters.pop_front();
+    characters.emplace_back(std::move(front));
 }
 
 Level* Game::getLevel() {
