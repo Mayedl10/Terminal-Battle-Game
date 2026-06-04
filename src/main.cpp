@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
     // from C's buffers (ie. use mutexes around IO operations and dont use C's IO stuff)
     std::ios_base::sync_with_stdio(false);
 
-    Game test("./data/levels/", 2, 1);
+    Game test("./leveldata/debug/", 2, 1);
 
     try {
         while (test.runGameCycle()) { }
