@@ -7,6 +7,8 @@
 #include <cctype>
 #include <memory>
 #include <deque>
+#include <thread>
+#include <chrono>
 
 void ConsoleHandler::clearScreen() {
     // ANSI escape sequence that clears the screen and then resets the cursor position
@@ -79,4 +81,24 @@ void ConsoleHandler::pressEnterToContinue() {
 
     std::string dummyBuffer;
     std::getline(std::cin, dummyBuffer);
+}
+
+void ConsoleHandler::printAndWait(std::string_view message, int ms) {
+    std::cout << message << std::flush; // flush to force the character to be displayed
+    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+}
+
+void ConsoleHandler::slowPrint(std::string_view message, int ms, char end='\n') {
+    for (char c: message) {
+        std::cout << c << std::flush;
+        std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+    }
+    if (end != '\0') {
+        std::cout << end << std::flush;
+    }
+}
+
+void ConsoleHandler::slowPrintAndWait(std::string_view message, int ms_interval, int ms_waitTime, char end='\n') {
+    slowPrint(message, ms_interval, end);
+    std::this_thread::sleep_for(std::chrono::milliseconds(ms_waitTime));
 }

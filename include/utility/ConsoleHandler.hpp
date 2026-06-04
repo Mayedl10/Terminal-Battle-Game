@@ -18,4 +18,10 @@ public:
 
     static void pressEnterToContinue();
 
+    static void printAndWait(std::string_view message, int ms);
+
+    // set "end" to '\0' if you don't want a specific terminating character
+    static void slowPrint(std::string_view message, int ms, char end='\n');
+    // set "end" to '\0' if you don't want a specific terminating character
+    static void slowPrintAndWait(std::string_view message, int ms_interval, int ms_waitTime, char end='\n');
 };
