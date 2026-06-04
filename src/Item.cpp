@@ -1,4 +1,4 @@
-// this file implements behavious of Character and Game!
+// this file implements behavious of Character and Game
 // it handles functionalities related to items
 // (i didn't want Game.cpp and Character.cpp to become too big)
 // (plus, it cant hurt to keep item-related logic close together)
@@ -25,23 +25,29 @@ void Character::useHeldItem() {
             break;
         case IT_HealthPotion:
             restoreHealth(10.0);
+            std::cout << "Player " << getNameUpper() << " restored some HP!" << std::endl;
             break;
         case IT_SpeedPotion:
             setSpeed(getSpeed() +2);
+            std::cout << "Player " << getNameUpper() << " raised their speed!" << std::endl;
             break;
         case IT_TurtlePotion:
             setSpeed(getSpeed() -3);
             setDefense(getDefense() *1.5f);
+            std::cout << "Player " << getNameUpper() << " became like a turtle!" << std::endl;
             break;
         case IT_HealthPotion_II:
             restoreHealth(15.0);
+            std::cout << "Player " << getNameUpper() << " restored a lot of HP!" << std::endl;
             break;
         case IT_SpeedPotion_II:
             setSpeed(getSpeed() +3);
+            std::cout << "Player " << getNameUpper() << " drastically raised their speed!" << std::endl;
             break;
         case IT_TurtlePotion_II:
             setSpeed(getSpeed() -4);
             setDefense(getDefense() *1.8f);
+            std::cout << "Player " << getNameUpper() << " became a lot like a turtle!" << std::endl;
             break;
         default:
             // shouldnt happen

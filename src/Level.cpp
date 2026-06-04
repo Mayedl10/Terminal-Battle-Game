@@ -142,7 +142,7 @@ Level::Level(std::string levelFilePath) {
 
         case '\r':
             // do nothing
-            // f*ck you, windows :D
+            // you can never know with windows, it likes to add these characters to files
             break;
         
         default:

@@ -81,22 +81,16 @@ void Game::aiCharacterAction(Character *character, QueryOptionsCharacterAction a
         break;
 
     case QueryOptionsCharacterAction::STATUS:
-        // print some information
-        // don't put character to the end of the queue!
-        // ^ handled by runGameCycle
-        character->printStatus();
-        ConsoleHandler::pressEnterToContinue();
+        throw std::runtime_error("Game::aiCharacterAction: AI character chose STATUS, which should not be possible.");
         break;
 
     case QueryOptionsCharacterAction::PASS:
-        // do nothing
-        // "pass" ... "i'm not doing anything this round"
+        throw std::runtime_error("Game::aiCharacterAction: AI character chose PASS, which should not be possible.");
         break;
 
     case QueryOptionsCharacterAction::USE_ITEM:
         std::cout << "Player " << character->getNameUpper() << " used an item: [todo - implement proper item printing]" << std::endl;
         character->useHeldItem();
-        ConsoleHandler::pressEnterToContinue();
         break;
 
     default: // if it's none of the above, it's probably a direction. if it isn't, let moveCharacter throw an exception

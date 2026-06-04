@@ -102,3 +102,8 @@ void ConsoleHandler::slowPrintAndWait(std::string_view message, int ms_interval,
     slowPrint(message, ms_interval, end);
     std::this_thread::sleep_for(std::chrono::milliseconds(ms_waitTime));
 }
+
+void ConsoleHandler::waitForMilliseconds(int ms) {
+    std::cout << "@sleep: " << ms << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+}

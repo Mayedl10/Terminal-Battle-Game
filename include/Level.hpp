@@ -14,7 +14,9 @@ constexpr std::string_view levelFileExtension = ".dat";
 class Game;
 
 class Level {
-    std::vector<std::vector<Tile>> map;
+    // note: tiles are stored with inverted indexes
+    // map[y][x] returns the tile at position (x, y)
+    std::vector<std::vector<Tile>> map; 
     int maxSupportedCharacters;
 
 public:

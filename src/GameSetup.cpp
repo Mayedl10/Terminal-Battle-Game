@@ -21,7 +21,7 @@ void Game::loadLevels(const std::string& levelFolderPath) {
             }
         }
     } catch(const std::filesystem::filesystem_error& e) {
-        std::cerr << "An exception occurred while trying to load the levels. Game::Game() tried to create a list of all files in \""
+        std::cerr << "Game::loadLevels: An exception occurred while trying to load the levels. Game::Game() tried to create a list of all files in \""
         << levelFolderPath << "\" with extension " << levelFileExtension << " but failed. Exception thrown:\n" 
         << e.what() << std::endl;
         throw; // re-throw exception
@@ -33,7 +33,7 @@ void Game::loadLevels(const std::string& levelFolderPath) {
             levels.push_back(std::make_unique<Level>(levelFile));
         }
         catch(const std::exception& e) {
-            std::cerr << "An exception occurred while trying to load level: " << levelFile << "\n"
+            std::cerr << "Game::loadLevels: An exception occurred while trying to load level: " << levelFile << "\n"
             << e.what() << std::endl;
             throw;
         } 

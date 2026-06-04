@@ -43,6 +43,7 @@ bool Game::runGameCycle() {
     getLevel()->displayLevel(characters);
     std::cout << "It's player " << current->getNameUpper() << "'s turn!" << std::endl;
     for (auto& p: characters) {
+        // print character HP
         std::cout << "\t " << p->getNameUpper() << ": " << p->getHealth() << "HP" << std::endl;
     }
 
@@ -69,7 +70,7 @@ bool Game::runGameCycle() {
         characterAction(current, choice);
     } else {
         aiCharacterAction(current, choice, secondAIParameter);
-        ConsoleHandler::pressEnterToContinue();
+        ConsoleHandler::waitForMilliseconds();
     }
 
     // pick up items
@@ -78,7 +79,7 @@ bool Game::runGameCycle() {
         bool pickup = ch->attemptPickup(getLevel());
         if (pickup) {
             std::cout << "Player " << ch->getNameUpper() << " picked up an item!" << std::endl;
-            ConsoleHandler::pressEnterToContinue();
+            ConsoleHandler::waitForMilliseconds();
         }
     }
 
@@ -122,10 +123,11 @@ bool Game::attemptAttack(Character* attacker, Character* target) {
     // return false if target is too far away
     if (!MathUtils::pointInRange(attPos, static_cast<double>(attacker->getRange()), tarPos)) {
         std::cout << "The attack failed because " << target->getNameUpper() << " was too far away." << std::endl;
+        ConsoleHandler::waitForMilliseconds();
         return false;
     }
 
-    // if target is in range, perform raymarching to see if there is a wall obstructing the path.
+    // if target is in range, perform """raymarching""" to see if there is a wall obstructing the path.
     // use Bresenham's line algorithm
 
     auto& map = getLevel()->getMap();
@@ -136,12 +138,19 @@ bool Game::attemptAttack(Character* attacker, Character* target) {
     for (auto p: line) {
         if (map[p.second][p.first].type == TileType::TT_Wall) {
             std::cout << "The attack failed because there was a wall in the way." << std::endl;
+            ConsoleHandler::waitForMilliseconds();
             return false;
         } 
     }
 
     // attack is valid
     target->hurt(attacker->getStrength());
+    std::cout << "Player " << attacker->getNameUpper() << " dealt " << attacker->getStrength() << " points of damage to " << target->getNameUpper() << "!" << std::endl;
+    
+    // if the attacker is an ai, there was already a sleep caused by Game::runGameCycle
+    if (attacker->isHuman()) {
+        ConsoleHandler::waitForMilliseconds();
+    }
 
     return true;
 }
@@ -170,10 +179,11 @@ void Game::characterAction(Character *character, QueryOptionsCharacterAction act
     case QueryOptionsCharacterAction::USE_ITEM:
         std::cout << "Player " << character->getNameUpper() << " used an item: [todo - implement proper item printing]" << std::endl;
         character->useHeldItem();
-        ConsoleHandler::pressEnterToContinue();
+        ConsoleHandler::waitForMilliseconds();
         break;
     default: // if it's none of the above, it's probably a direction. if it isn't, let moveCharacter throw an exception
         // query distance
+        std::cout << "How far do you want to go?" << std::endl;
         int dist = ConsoleHandler::readIntInRange(1, character->getSpeed());
         moveCharacter(character, action, dist);
         break;
@@ -264,6 +274,7 @@ void Game::moveCharacter(Character *character, QueryOptionsCharacterAction direc
         throw std::invalid_argument("Game::moveCharacter: invalid argument <direction>: " + std::to_string(direction));
         break;
     }
+    std::cout << "Player " << character->getNameUpper() << " moved to (" << character->getXpos() << ", " << character->getYpos() << ")" << std::endl;
 }
 
 Game::Game(const std::string& levelFolderPath, const int characterCount, const int AIcharacterCount) {
