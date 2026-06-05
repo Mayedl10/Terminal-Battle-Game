@@ -7,6 +7,7 @@
 #include <deque>
 #include <utility>
 #include <algorithm>
+#include <unordered_map>
 
 #include "Item.hpp"
 #include "Tile.hpp"
@@ -21,69 +22,88 @@ int Level::getMaxSupportedCharacters() {
     return maxSupportedCharacters;
 }
 
+static uint64_t packOccupancyMapIndex(int y, int x) {
+// using signed parameters so i can notice bugs where coordinates become negative more easily.
+// there is currently no known bug like that, but it can't hurt to have safeguards in place
+    if (y < 0 || x < 0) {
+        throw std::invalid_argument("packOccupancyMapIndex: cannot pack negative indexes");
+    }
+    // pack two numbers into the uint64_t used in the hashmap for Level::displayLevel
+    return (static_cast<uint64_t>(y) << 32) | x;
+}
+
 void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
+    std::unordered_map<uint64_t, std::vector<Character*>> occupancyMap;
 
-    std::vector<std::pair<int, int>> playerPositions;
+    // stores pointers to the characters in a way, that they can be acessed via their positions
+    for (auto& ch: players) {
+        uint64_t index = packOccupancyMapIndex(
+            ch->getYpos(),
+            ch->getXpos()
+        );
+        occupancyMap[index].push_back(ch.get());
+        // note: .at() throws an exception when the index doesnt exist, but operator[] creates the element
+    }
+
+    /*
+    this approach is more efficient than what i originally did.
+    originally, i would've created a vector of Character*s on
+    every iteration of the inner for-loop. that would've been
+    more readable, but this is probably better
+    */
+    
+    for (int y = 0; y < static_cast<int>(map.size()); y++) {
+        for (int x = 0; x < static_cast<int>(map[y].size()); x++) {
 
 
-    for (int i = 0; i < static_cast<int>(map.size()); i++) {
-        auto row = map[i];
-        for (int j = 0; j < static_cast<int>(row.size()); j++) {
-            auto& t = row[j];
-
-            int playerIdx = -1;
-            for (int k = 0; k < static_cast<int>(players.size()); k++) {
-                if (players[k]->getXpos() == j && players[k]->getYpos() == i) {
-                    playerIdx = k;
-                }
+            // this approach doesn't create every vector every time, like just checking operator[] would
+            auto idx = packOccupancyMapIndex(y, x);
+            auto it = occupancyMap.find(idx);
+            size_t playerCount = 0;
+            if (it != occupancyMap.end()) {
+                playerCount = it->second.size();
             }
 
-            if (playerIdx >= 0) {
-                // there is a player on this field
-                std::cout << players[playerIdx]->getName();
+            if (playerCount == 0 && map[y][x].item == ItemType::IT_None) {
+                // no characters on this tile, default behaviour
 
-            } else if (t.item != ItemType::IT_None) {
-                // there is an item on this field
-                std::cout << TileType::TT_VISUAL_HasItem;
+                switch (map[y][x].type) {
+                    case TileType::TT_CharacterSpawn:
+                        // this tile "looks the same" as TT_Regular
+                        std::cout << static_cast<char>(TileType::TT_Regular);
+                        break;
+
+                    // if the tile type is any valid type OTHER than CharacterSpawn, just print its value
+                    // intentional fallthrough
+                    case TileType::TT_Regular:
+                    case TileType::TT_Wall:
+                    case TileType::TT_Hole:
+                        std::cout << static_cast<char>(map[y][x].type);
+                        break;
+
+                    default:
+                        throw std::runtime_error("Level::displayLevel: invalid tile type found at x" + std::to_string(x) + " y" + std::to_string(y));
+                        break;
+                }
+            
+            } else if (playerCount == 0 && map[y][x].item != ItemType::IT_None) {
+                // there is an item here
+                std::cout << static_cast<char>(TileType::TT_VISUAL_HasItem);
+
+            } else if (playerCount == 1) {
+                // if there is only one character here, print their name
+                std::cout << it->second[0]->getName();
             
             } else {
-
-                switch (t.type) {
-                case (TileType::TT_CharacterSpawn):
-                    std::cout << TileType::TT_Regular;
-                    break;
-
-                case (TileType::TT_Regular):
-                    std::cout << TileType::TT_Regular;
-                    break;
-
-                case (TileType::TT_Hole):
-                    std::cout << TileType::TT_Hole;
-                    break;
-
-                case (TileType::TT_Wall):
-                    std::cout << TileType::TT_Wall;
-                    break;
-
-                case (TileType::TT_Invalid):
-                    std::cout << TileType::TT_Invalid;
-                    break;
-                
-                default:
-                    // if an invalid tile is found, print invalid '?' and the actual stored tile type
-                    // this should not happen anyway, and i should probably throw an exception instead,
-                    // but this is "good enough" and doesn't cause the program to potentially crash.
-                    // plus, i will definitely notice if the grid looks off
-                    std::cout << TileType::TT_Invalid
-                    << t.type
-                    << TileType::TT_Invalid;
-                    break;
-                }
+                // if there are multiple, print & to signify that
+                std::cout << static_cast<char>(TileType::TT_VISUAL_Crowded);
             }
-            std::cout << ' ';
+
+            std::cout << " ";
         }
-        std::cout << std::endl;
+        std::cout << "\n";
     }
+    std::cout << std::flush;
 }
 
 TileType Level::getTileTypeAt(int x, int y) {

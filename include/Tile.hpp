@@ -11,7 +11,8 @@ enum TileType : char {
     TT_Hole             = '*',
     TT_Regular          = '.',
     TT_CharacterSpawn   = '@',
-    TT_VISUAL_HasItem   = '!'   // no tile should actually have this
+    TT_VISUAL_HasItem   = '!',   // no tile should actually have this
+    TT_VISUAL_Crowded   = '&'    // ^. used when multiple players are on the same tile
 };
 
 struct Tile {
