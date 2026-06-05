@@ -9,6 +9,7 @@
 #include <deque>
 #include <thread>
 #include <chrono>
+#include <cmath>
 
 void ConsoleHandler::clearScreen() {
     // ANSI escape sequence that clears the screen and then resets the cursor position
@@ -105,4 +106,13 @@ void ConsoleHandler::slowPrintAndWait(std::string_view message, int ms_interval,
 
 void ConsoleHandler::waitForMilliseconds(int ms) {
     std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+}
+
+void ConsoleHandler::printHealthBar(float hp) {
+    int count = std::ceil(hp/5.0f); // one "segment" of the health bar ~ 5HP
+    std::cout << "[";
+    for (int i = 0; i < count; i++) {
+        std::cout << '#';
+    }
+    std::cout << "]";
 }

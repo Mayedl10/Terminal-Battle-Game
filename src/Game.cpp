@@ -45,7 +45,9 @@ bool Game::runGameCycle() {
     for (auto& p: characters) {
         // print character HP
         if (!p->isAlive()) continue; // skip dead players
-        std::cout << "\t " << p->getNameUpper() << ": " << p->getHealth() << "HP" << std::endl;
+        std::cout << "\t" << p->getNameUpper() << ": ";
+        ConsoleHandler::printHealthBar(p->getHealth());
+        std::cout << " " << p->getHealth() << "HP" << std::endl;
     }
 
     // hide/show "use item" actions

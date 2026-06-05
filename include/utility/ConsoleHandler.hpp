@@ -26,4 +26,6 @@ public:
     static void slowPrintAndWait(std::string_view message, int ms_interval, int ms_waitTime, char end='\n');
 
     static void waitForMilliseconds(int ms = 2000);
+
+    static void printHealthBar(float hp);
 };
