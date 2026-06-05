@@ -2,7 +2,7 @@
 Level files are very visual. Every character represents a tile.
 - `#` Wall
     - blocks movement, attacks
-- `O` Hole
+- `*` Hole
     - blocks movement, allows attacks
 - `.` Regular floor
     - allows movement, allows attacks
