@@ -12,16 +12,18 @@ int main(int argc, char **argv) {
     // from C's buffers (ie. use mutexes around IO operations and dont use C's IO stuff)
     std::ios_base::sync_with_stdio(false);
 
-    Game test("./leveldata/debug/", 5, 4);
+    Game game("./leveldata/debug/", 2, 1);
 
     try {
-        while (test.runGameCycle()) { }
+        while (game.runGameCycle()) { }
     }
     catch(const std::exception& e) {
         std::cerr << e.what() << '\n';
 
         std::cout << "[[AN ERROR OCCURRED AND THE GAME WAS CLOSED]]" << std::endl;
     }
+
+    game.winScreen();
 
     ConsoleHandler::pressEnterToContinue();
     

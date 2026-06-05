@@ -26,6 +26,9 @@ class Game {
     void enqueueFrontCharacter(); // moves the character at the front of the player deque to the back
     
     Level* getLevel();
+    void setLevelIdx(int idx);
+    int getLevelIdx();
+    std::mt19937& getRNG();
 
     // returns false if the attack failed
     // if it succeeds, the function applies damage automatically
@@ -47,10 +50,7 @@ public:
 
     // returns false if the game is over
     bool runGameCycle();
-
-    int getLevelIdx();
-    void setLevelIdx(int idx);
-    std::mt19937& getRNG();
+    void winScreen();
 
     /*
     * levelFolderPath ... path to a folder that contains the levels
