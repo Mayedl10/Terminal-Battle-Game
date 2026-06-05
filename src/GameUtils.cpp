@@ -53,6 +53,8 @@ Character* Game::getClosestCharacterInRange(Character *character) {
             distance <= static_cast<float>(character->getRange())
             &&
             distance < closestDist
+            &&
+            ch->isAlive() // cant select dead players
         ) {
             closestDist = distance;
             ret = ch.get();

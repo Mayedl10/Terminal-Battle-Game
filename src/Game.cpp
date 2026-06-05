@@ -44,6 +44,7 @@ bool Game::runGameCycle() {
     std::cout << "It's player " << current->getNameUpper() << "'s turn!" << std::endl;
     for (auto& p: characters) {
         // print character HP
+        if (!p->isAlive()) continue; // skip dead players
         std::cout << "\t " << p->getNameUpper() << ": " << p->getHealth() << "HP" << std::endl;
     }
 
@@ -109,7 +110,7 @@ bool Game::attemptAttack(Character* attacker, Character* target) {
     # . . A
     */
 
-    std::cout << attacker->getNameUpper() << " attempted an attack on " << target->getNameUpper() << "!" << std::endl;
+    std::cout << "Player " << attacker->getNameUpper() << " attempted an attack on " << target->getNameUpper() << "!" << std::endl;
 
     std::pair<int, int> attPos = {
         attacker->getXpos(),

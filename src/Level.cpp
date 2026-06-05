@@ -37,6 +37,8 @@ void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
 
     // stores pointers to the characters in a way, that they can be acessed via their positions
     for (auto& ch: players) {
+        if (!ch->isAlive()) continue; // skip dead players
+        
         uint64_t index = packOccupancyMapIndex(
             ch->getYpos(),
             ch->getXpos()
