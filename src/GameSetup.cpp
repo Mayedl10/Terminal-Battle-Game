@@ -60,23 +60,26 @@ void Game::loadPlayers(const int characterCount, const int AIcharacterCount) {
         {"Ranger", true, CharacterClass::CC_Ranger}
     });
 
+    int humanPlayerCount = characterCount - AIcharacterCount;
+
     for (int i = 0; i < characterCount; i++) {
-        if (i >= AIcharacterCount) {
-
-            std::cout << "Player " << static_cast<char>(nameCounter) << ", please select a character class." << std::endl;
-            CharacterClass cclass = static_cast<CharacterClass>(classQuery.query());
-
-            characters.push_back(std::make_unique<Character>(
-                nameCounter++,  // increment player counter
-                cclass,
-                true
-            ));
-        } else {
+        if (i >= humanPlayerCount) {
             // this is an AI
             characters.push_back(std::make_unique<Character>(
                 nameCounter++,  // increment player counter
                 Character::validClasses[classDistribution(getRNG())],    // random class, very hacky solution
                 false
+            ));
+
+        } else {
+            // this is a human
+            std::cout << "Player " << static_cast<char>(nameCounter) << ", please select a character class." << std::endl;
+            CharacterClass cclass = static_cast<CharacterClass>(classQuery.query());
+    
+            characters.push_back(std::make_unique<Character>(
+                nameCounter++,  // increment player counter
+                cclass,
+                true
             ));
         }
 

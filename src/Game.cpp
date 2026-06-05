@@ -161,6 +161,7 @@ void Game::characterAction(Character *character, QueryOptionsCharacterAction act
             // added scope around attack case to prevent a compile time error
             // caused by target being accessible from other cases, even though
             // it might not be initialised there
+            std::cout << "Who do you want to attack?" << std::endl;
             Character *target = ConsoleHandler::queryCharacter(characters);
             (void)attemptAttack(character, target);
         }
