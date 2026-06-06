@@ -82,6 +82,7 @@ void Game::loadPlayers(const int characterCount, const int AIcharacterCount) {
                 cclass,
                 true
             ));
+            console::clearScreen();
         }
 
     }

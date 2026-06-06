@@ -11,6 +11,8 @@
 #include "ActionHandler.hpp"
 #include "AIHandler.hpp"
 
+struct GameConfig;
+
 class Game {
     std::deque<std::unique_ptr<Character>> characters;
     std::vector<std::unique_ptr<Level>> levels;
@@ -20,7 +22,7 @@ class Game {
     std::unique_ptr<ActionHandler> actionHandler;
     
     void loadLevels(const std::string& levelFolderPath);
-    void loadPlayers(const int characterCount, const int humanCharacterCount);
+    void loadPlayers(const int characterCount, const int aiCharacterCount);
     void selectRandomLevel();
     void placePlayers();
     void enqueueFrontCharacter(); // moves the character at the front of the player deque to the back
@@ -43,4 +45,5 @@ public:
     * characters are sorted according to their speed; they then get to take action in order until the game ends
     */
     Game(const std::string& levelFolderPath, const int characterCount, const int AIcharacterCount);
+    Game(const GameConfig& config);
 };

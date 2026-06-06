@@ -10,6 +10,7 @@
 class Character;
 
 constexpr std::string_view levelFileExtension = ".dat";
+constexpr std::string_view defaultLevelFilePath = "./leveldata/levels/";
 
 class Game;
 

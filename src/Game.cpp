@@ -11,6 +11,7 @@
 #include <sstream>
 #include <iomanip>
 
+#include "TitleScreen.hpp"
 #include "Game.hpp"
 #include "Character.hpp"
 #include "Level.hpp"
@@ -95,6 +96,9 @@ bool Game::runGameCycle() {
     // no need to check if the game is over, the next cycle deals with that
     return true;
 }
+
+Game::Game(const GameConfig& config)
+    : Game(config.levelFolderPath, config.totalPlayers, config.aiPlayers) {}
 
 Game::Game(const std::string& levelFolderPath, const int characterCount, const int AIcharacterCount)
     : rng{std::mt19937(std::chrono::high_resolution_clock::now().time_since_epoch().count())}

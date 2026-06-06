@@ -1,7 +1,9 @@
 #include <iostream>
+#include <optional>
 
 #include "Game.hpp"
 #include "ConsoleUtils.hpp"
+#include "TitleScreen.hpp"
 
 int main(int argc, char **argv) {
     // fixes an annoying bug where the OS's input stream didn't match the program's.
@@ -11,9 +13,20 @@ int main(int argc, char **argv) {
     // from C's buffers (ie. use mutexes around IO operations and dont use C's IO stuff)
     std::ios_base::sync_with_stdio(false);
     
+    auto config = TitleScreen::display();
+    if (!config) {
+        return 0;
+    }
+
     try {
-        Game game("./leveldata/debug/", 2, 1);
+        Game game(config.value());
+        console::clearScreen();
+
+        console::slowPrint("Are you ready to begin?");
+        console::pressEnterToContinue();
+
         while (game.runGameCycle()) { }
+        
         game.winScreen();
     }
     catch(const std::exception& e) {

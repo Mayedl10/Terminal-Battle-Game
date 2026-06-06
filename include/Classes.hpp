@@ -29,7 +29,7 @@ struct CharacterClasses {
         // int range;
         10,
         // float strength;
-        2.0f,
+        3.5f,
         // float defense;  // gets multiplied with damage; range 0.0f~1.0f
         0.6f,
         // float health;   // range 0.0f~100.0f
