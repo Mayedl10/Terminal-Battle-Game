@@ -5,7 +5,7 @@
 CXX := g++
 
 # Flags
-CXXFLAGS := -std=c++23 -Iinclude -Iinclude/utility -Iutil -Wall -Wextra -MMD -MP
+CXXFLAGS := -std=c++23 -Iinclude -Iinclude/utility -Iutil -Wall -Wextra -MMD -MP -O2 -static-libstdc++ -static-libgcc
 
 # Directories
 SRC_DIR := src
