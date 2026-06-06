@@ -29,7 +29,7 @@ bool ActionHandler::attemptAttack(Character *attacker, Character *target) {
 
     std::ostringstream ss;
 
-    ss << "Player " << attacker->getNameUpper() << " attempted an attack on " << target->getNameUpper() << "!";
+    ss << "Player " << attacker->getNameUpper() << " attempted an attack on Player " << target->getNameUpper() << "!";
     console::slowPrint(ss.str());
 
     std::pair<int, int> attPos = {

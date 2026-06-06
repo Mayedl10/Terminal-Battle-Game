@@ -108,10 +108,17 @@ void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
 
             } else if (playerCount == 1) {
                 // if there is only one character here, print their name
-                console::printColouredChar(
-                    it->second[0]->getName(),
-                    console::style::Yellow
-                );
+                if (*(players.front().get()) == *(it->second[0])) {
+                    console::printColouredCharBold(
+                        it->second[0]->getName(),
+                        console::style::Yellow
+                    );
+                } else {
+                    console::printColouredChar(
+                        it->second[0]->getName(),
+                        console::style::Yellow
+                    );
+                }
             
             } else {
                 // if there are multiple, print & to signify that
