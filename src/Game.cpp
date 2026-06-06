@@ -47,7 +47,7 @@ bool Game::runGameCycle() {
     for (auto& p: characters) {
         // print character HP
         if (!p->isAlive()) continue; // skip dead players
-        std::cout << "\t" << p->getNameUpper() << ": ";
+        std::cout << "\t" << p->getName() << ": ";
         console::printHealthBar(p->getHealth());
         std::cout << " " << p->getHealth() << "HP" << std::endl;
     }

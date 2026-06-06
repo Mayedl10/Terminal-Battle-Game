@@ -111,8 +111,27 @@ void console::waitForMilliseconds(int ms) {
 void console::printHealthBar(float hp) {
     int count = std::ceil(hp/5.0f); // one "segment" of the health bar ~ 5HP
     std::cout << "[";
+
+    if (count == 1) {
+        std::cout << style::Red;
+    } else if (count <= 3) {
+        std::cout << style::Yellow;
+    } else {
+        std::cout << style::Green;
+    }
+
     for (int i = 0; i < count; i++) {
         std::cout << '#';
     }
+    std::cout << style::Reset;
     std::cout << "]";
+}
+
+void console::printColouredChar(char c, std::string_view col) {
+    std::cout << col << c << style::Reset;
+}
+
+void console::printColouredCharBold(char c, std::string_view col) {
+    std::cout << style::Bold << col << c << style::Reset;
+
 }

@@ -6,12 +6,12 @@
 // - a Tile stores its own type using these
 // - this enum stores what tile is associated with which symbol (with exceptions) 
 enum TileType : char {
-    TT_Invalid          = '?',
+    TT_Invalid          = '!',
     TT_Wall             = '#',
     TT_Hole             = '*',
     TT_Regular          = '.',
     TT_CharacterSpawn   = '@',
-    TT_VISUAL_HasItem   = '!',   // no tile should actually have this
+    TT_VISUAL_HasItem   = '?',   // no tile should actually have this
     TT_VISUAL_Crowded   = '&'    // ^. used when multiple players are on the same tile
 };
 

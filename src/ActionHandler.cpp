@@ -78,7 +78,14 @@ bool ActionHandler::attemptAttack(Character *attacker, Character *target) {
     ss << std::fixed << std::setprecision(2);
     ss << "Player " << attacker->getNameUpper() << " dealt " << damageDealt << " points of damage to player " << target->getNameUpper() << "!";
     console::slowPrintAndWait(ss.str());
-    
+
+    if (!target->isAlive()) {
+        ss.str("");
+        ss.clear();
+        ss << "Player " << target->getNameUpper() << " died!";
+        console::slowPrintAndWait(ss.str());
+    }
+
     // if the attacker is an ai, there was already a sleep caused by Game::runGameCycle
     if (attacker->isHuman()) {
         console::waitForMilliseconds();

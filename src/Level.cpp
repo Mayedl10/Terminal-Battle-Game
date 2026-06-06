@@ -13,6 +13,7 @@
 #include "Tile.hpp"
 #include "Game.hpp"
 #include "FileUtils.hpp"
+#include "ConsoleUtils.hpp"
 
 std::vector<std::vector<Tile>>& Level::getMap() {
     return map;
@@ -75,12 +76,22 @@ void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
                         std::cout << static_cast<char>(TileType::TT_Regular);
                         break;
 
-                    // if the tile type is any valid type OTHER than CharacterSpawn, just print its value
-                    // intentional fallthrough
                     case TileType::TT_Regular:
-                    case TileType::TT_Wall:
-                    case TileType::TT_Hole:
                         std::cout << static_cast<char>(map[y][x].type);
+                        break;
+
+                    case TileType::TT_Wall:
+                        console::printColouredCharBold(
+                            static_cast<char>(map[y][x].type),
+                            console::style::Magenta
+                        );
+                        break;
+
+                    case TileType::TT_Hole:
+                        console::printColouredCharBold(
+                            static_cast<char>(map[y][x].type),
+                            console::style::Blue
+                        );
                         break;
 
                     default:
@@ -90,15 +101,24 @@ void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
             
             } else if (playerCount == 0 && map[y][x].item != ItemType::IT_None) {
                 // there is an item here
-                std::cout << static_cast<char>(TileType::TT_VISUAL_HasItem);
+                console::printColouredCharBold(
+                    static_cast<char>(TileType::TT_VISUAL_HasItem),
+                    console::style::Green
+                );
 
             } else if (playerCount == 1) {
                 // if there is only one character here, print their name
-                std::cout << it->second[0]->getName();
+                console::printColouredChar(
+                    it->second[0]->getName(),
+                    console::style::Yellow
+                );
             
             } else {
                 // if there are multiple, print & to signify that
-                std::cout << static_cast<char>(TileType::TT_VISUAL_Crowded);
+                console::printColouredChar(
+                    static_cast<char>(TileType::TT_VISUAL_Crowded),
+                    console::style::Yellow
+                );
             }
 
             std::cout << " ";
