@@ -5,7 +5,7 @@
 
 #include "Game.hpp"
 #include "Character.hpp"
-#include "ConsoleHandler.hpp"
+#include "ConsoleUtils.hpp"
 
 // AI is part of game class, because this needs a lot of things from the game object to work
 std::pair<QueryOptionsCharacterAction, std::optional<std::variant<Character*, int>>> Game::pickActionAI() {
@@ -89,7 +89,7 @@ void Game::aiCharacterAction(Character *character, QueryOptionsCharacterAction a
         break;
 
     case QueryOptionsCharacterAction::USE_ITEM:
-        ConsoleHandler::slowPrintAndWait("Player " + std::to_string(character->getNameUpper()) + " used an item: " + std::string(itemToString(character->getHeldItem())));
+        console::slowPrintAndWait("Player " + std::to_string(character->getNameUpper()) + " used an item: " + std::string(itemToString(character->getHeldItem())));
         character->useHeldItem();
         break;
 

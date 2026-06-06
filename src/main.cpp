@@ -2,11 +2,11 @@
 
 #include "Game.hpp"
 #include "Level.hpp"
-#include "ConsoleHandler.hpp"
+#include "ConsoleUtils.hpp"
 
 int main(int argc, char **argv) {
     // fixes an annoying bug where the OS's input stream didn't match the program's.
-    // this caused ConsoleHandler::pressEnterToContinue to not work properly when
+    // this caused console::pressEnterToContinue to not work properly when
     // called multiple times in a row
     // note: this makes iostream no longer thread safe and detaches CPP's buffers
     // from C's buffers (ie. use mutexes around IO operations and dont use C's IO stuff)
@@ -25,6 +25,6 @@ int main(int argc, char **argv) {
 
     game.winScreen();
 
-    ConsoleHandler::pressEnterToContinue();
+    console::pressEnterToContinue();
     
 }

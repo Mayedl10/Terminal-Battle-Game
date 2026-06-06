@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "Character.hpp"
-#include "ConsoleHandler.hpp"
+#include "ConsoleUtils.hpp"
 
 void Game::winScreen() {
     Character *winner;
@@ -15,7 +15,7 @@ void Game::winScreen() {
         }
     }
 
-    ConsoleHandler::slowPrintAndWait("--- GAME OVER ---", 50);
-    ConsoleHandler::slowPrintAndWait("Congratulations, Player " + std::string(1, winner->getNameUpper()) + (winner->isHuman() ? "." : " (AI)."));
-    ConsoleHandler::slowPrintAndWait("You won the game!", 20, 1000);
+    console::slowPrintAndWait("--- GAME OVER ---", 50);
+    console::slowPrintAndWait("Congratulations, Player " + std::string(1, winner->getNameUpper()) + (winner->isHuman() ? "." : " (AI)."));
+    console::slowPrintAndWait("You won the game!", 20, 1000);
 }

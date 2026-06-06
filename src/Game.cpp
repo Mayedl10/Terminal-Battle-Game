@@ -8,6 +8,8 @@
 #include <cmath>
 #include <optional>
 #include <variant>
+#include <sstream>
+#include <iomanip>
 
 #include "Game.hpp"
 #include "Character.hpp"
@@ -16,14 +18,14 @@
 #include "Tile.hpp"
 #include "InputQuery.hpp"
 #include "MathUtils.hpp"
-#include "ConsoleHandler.hpp"
+#include "ConsoleUtils.hpp"
 
 
 // returns false if the game is over
 bool Game::runGameCycle() {
     Character *current = characters.front().get();
 
-    ConsoleHandler::clearScreen();
+    console::clearScreen();
     int aliveCount = 0;
     for (auto& ch: characters) {
         if (ch->getHealth() > 0.0f) {
@@ -46,7 +48,7 @@ bool Game::runGameCycle() {
         // print character HP
         if (!p->isAlive()) continue; // skip dead players
         std::cout << "\t" << p->getNameUpper() << ": ";
-        ConsoleHandler::printHealthBar(p->getHealth());
+        console::printHealthBar(p->getHealth());
         std::cout << " " << p->getHealth() << "HP" << std::endl;
     }
 
@@ -73,7 +75,7 @@ bool Game::runGameCycle() {
         characterAction(current, choice);
     } else {
         aiCharacterAction(current, choice, secondAIParameter);
-        ConsoleHandler::waitForMilliseconds();
+        console::waitForMilliseconds();
     }
 
     // pick up items
@@ -81,8 +83,8 @@ bool Game::runGameCycle() {
         // the variable "pickup" is only used to make the code more "readable"
         bool pickup = ch->attemptPickup(getLevel());
         if (pickup) {
-            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, ch->getNameUpper()) + " picked up an item!");
-            ConsoleHandler::waitForMilliseconds();
+            console::slowPrintAndWait("Player " + std::string(1, ch->getNameUpper()) + " picked up an item!");
+            console::waitForMilliseconds();
         }
     }
 
@@ -112,7 +114,10 @@ bool Game::attemptAttack(Character* attacker, Character* target) {
     # . . A
     */
 
-    std::cout << "Player " << attacker->getNameUpper() << " attempted an attack on " << target->getNameUpper() << "!" << std::endl;
+    std::ostringstream ss;
+
+    ss << "Player " << attacker->getNameUpper() << " attempted an attack on " << target->getNameUpper() << "!" << std::endl;
+    console::slowPrint(ss.str());
 
     std::pair<int, int> attPos = {
         attacker->getXpos(),
@@ -124,9 +129,11 @@ bool Game::attemptAttack(Character* attacker, Character* target) {
     };
 
     // return false if target is too far away
-    if (!MathUtils::pointInRange(attPos, static_cast<double>(attacker->getRange()), tarPos)) {
-        std::cout << "The attack failed because " << target->getNameUpper() << " was too far away." << std::endl;
-        ConsoleHandler::waitForMilliseconds();
+    if (!math::pointInRange(attPos, static_cast<double>(attacker->getRange()), tarPos)) {
+        ss.str("");
+        ss.clear();
+        ss << "The attack failed because " << target->getNameUpper() << " was too far away." << std::endl;
+        console::slowPrintAndWait(ss.str(), 20, 2200);
         return false;
     }
 
@@ -134,25 +141,34 @@ bool Game::attemptAttack(Character* attacker, Character* target) {
     // use Bresenham's line algorithm
 
     auto& map = getLevel()->getMap();
-    auto line = MathUtils::bresenhamsLineAlgorithm(attPos, tarPos);
+    auto line = math::bresenhamsLineAlgorithm(attPos, tarPos);
 
     // check if any of the bresenham line points are walls
     // return if any of them are
     for (auto p: line) {
         if (map[p.second][p.first].type == TileType::TT_Wall) {
-            std::cout << "The attack failed because there was a wall in the way." << std::endl;
-            ConsoleHandler::waitForMilliseconds();
+            ss.str("");
+            ss.clear();
+            ss << "The attack failed because there was a wall in the way." << std::endl;
+            console::slowPrintAndWait(ss.str(), 20, 2200);
             return false;
         } 
     }
 
     // attack is valid
-    target->hurt(attacker->getStrength());
-    std::cout << "Player " << attacker->getNameUpper() << " dealt " << attacker->getStrength() << " points of damage to " << target->getNameUpper() << "!" << std::endl;
+    float damageDealt = attacker->getStrength() * target->getDefense();
+    target->hurt(damageDealt);
+
+    ss.str("");
+    ss.clear();
+
+    ss << std::fixed << std::setprecision(2);
+    ss << "Player " << attacker->getNameUpper() << " dealt " << damageDealt << " points of damage to player " << target->getNameUpper() << "!";
+    console::slowPrintAndWait(ss.str());
     
     // if the attacker is an ai, there was already a sleep caused by Game::runGameCycle
     if (attacker->isHuman()) {
-        ConsoleHandler::waitForMilliseconds();
+        console::waitForMilliseconds();
     }
 
     return true;
@@ -164,8 +180,8 @@ void Game::characterAction(Character *character, QueryOptionsCharacterAction act
             // added scope around attack case to prevent a compile time error
             // caused by target being accessible from other cases, even though
             // it might not be initialised there
-            std::cout << "Who do you want to attack?" << std::endl;
-            Character *target = ConsoleHandler::queryCharacter(characters);
+            console::slowPrint("Who do you want to attack?");
+            Character *target = console::queryCharacter(characters);
             (void)attemptAttack(character, target);
         }
         break;
@@ -174,21 +190,21 @@ void Game::characterAction(Character *character, QueryOptionsCharacterAction act
         // don't put character to the end of the queue!
         // ^ handled by runGameCycle
         character->printStatus();
-        ConsoleHandler::pressEnterToContinue();
+        console::pressEnterToContinue();
         break;
     case QueryOptionsCharacterAction::PASS:
         // do nothing
         // "pass" ... "i'm not doing anything this round"
         break;
     case QueryOptionsCharacterAction::USE_ITEM:
-        ConsoleHandler::slowPrintAndWait("Player " + std::string(1, character->getNameUpper()) + " used an item: " + std::string(itemToString(character->getHeldItem())));
+        console::slowPrintAndWait("Player " + std::string(1, character->getNameUpper()) + " used an item: " + std::string(itemToString(character->getHeldItem())));
         character->useHeldItem();
-        ConsoleHandler::waitForMilliseconds();
+        console::waitForMilliseconds();
         break;
     default: // if it's none of the above, it's probably a direction. if it isn't, let moveCharacter throw an exception
         // query distance
-        std::cout << "How far do you want to go?" << std::endl;
-        int dist = ConsoleHandler::readIntInRange(1, character->getSpeed());
+        console::slowPrint("How far do you want to go?");
+        int dist = console::readIntInRange(1, character->getSpeed());
         moveCharacter(character, action, dist);
         break;
     }
@@ -278,11 +294,14 @@ void Game::moveCharacter(Character *character, QueryOptionsCharacterAction direc
         throw std::invalid_argument("Game::moveCharacter: invalid argument <direction>: " + std::to_string(direction));
         break;
     }
-    std::cout << "Player " << character->getNameUpper() << " moved to (" << character->getXpos() << ", " << character->getYpos() << ")" << std::endl;
+
+    std::ostringstream ss;
+    ss << "Player " << character->getNameUpper() << " moved to (" << character->getXpos() << ", " << character->getYpos() << ")" << std::endl;
+    console::slowPrintAndWait(ss.str());
 }
 
 Game::Game(const std::string& levelFolderPath, const int characterCount, const int AIcharacterCount) {
-    ConsoleHandler::clearScreen();
+    console::clearScreen();
     // seed random number engine with unix epoch
     rng = std::mt19937(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 

@@ -31,7 +31,7 @@ enum ItemSpawnWeights : int {
 constexpr std::string_view itemToString(ItemType type) {
     switch (type) {
         case IT_Invalid:            return "[INVALID]";
-        case IT_None:               return "";
+        case IT_None:               return "None";
         case IT_HealthPotion:       return "Health Potion";
         case IT_SpeedPotion:        return "Speed Potion";
         case IT_TurtlePotion:       return "Turtle Potion";

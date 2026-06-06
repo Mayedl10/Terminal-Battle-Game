@@ -4,12 +4,14 @@
 // (plus, it cant hurt to keep item-related logic close together)
 #include "Character.hpp"
 #include "Game.hpp"
-#include "ConsoleHandler.hpp"
+#include "ConsoleUtils.hpp"
 
 #include <array>
 #include <stdexcept>
 #include <iostream>
 #include <random>
+#include <sstream>
+#include <iomanip>
 
 /*
 * note: bounds checking for attributes should be handled by
@@ -17,44 +19,53 @@
 */
 
 void Character::useHeldItem() {
+    std::ostringstream ss;
+    ss << std::fixed << std::setprecision(2);
+    ss << "Player " << getNameUpper();
+
     switch (heldItem) {
         case IT_Invalid:
             throw std::runtime_error("Character::useHeldItem: encountered character with invalid item type: " + getName());
             break;
         case IT_None:
-            ConsoleHandler::slowPrintAndWait("You cannot use an item unless you are holding one!");
+            console::slowPrintAndWait("You cannot use an item unless you are holding one!");
             break;
         case IT_HealthPotion:
             restoreHealth(10.0);
-            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, getNameUpper()) + " restored some HP!");
+            ss << " restored some HP!";
             break;
         case IT_SpeedPotion:
             setSpeed(getSpeed() +2);
-            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, getNameUpper()) + " raised their speed!");
+            ss << " raised their speed!";
             break;
         case IT_TurtlePotion:
             setSpeed(getSpeed() -3);
-            setDefense(getDefense() *1.5f);
-            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, getNameUpper()) + " became like a turtle!");
+            setDefense(getDefense() /1.5f);
+            ss << " became like a turtle!";
             break;
         case IT_HealthPotion_II:
             restoreHealth(15.0);
-            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, getNameUpper()) + " restored a lot of HP!");
+            ss << " restored a lot of HP!";
             break;
         case IT_SpeedPotion_II:
             setSpeed(getSpeed() +3);
-            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, getNameUpper()) + " drastically raised their speed!");
+            ss << " drastically raised their speed!";
             break;
         case IT_TurtlePotion_II:
             setSpeed(getSpeed() -4);
-            setDefense(getDefense() *1.8f);
-            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, getNameUpper()) + " became a lot like a turtle!");
+            setDefense(getDefense() /1.8f);
+            ss << " became a lot like a turtle!";
             break;
         default:
             // shouldnt happen
             throw std::runtime_error("Character::useHeldItem: encountered character with unknown held item type: " + std::to_string(heldItem) + ". Character: " + getName());
             break;
     }
+
+    if (heldItem != IT_None) {
+        console::slowPrintAndWait(ss.str());
+    }
+
     heldItem = ItemType::IT_None;
 }
 

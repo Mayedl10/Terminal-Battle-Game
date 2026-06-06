@@ -12,7 +12,7 @@
 #include "Item.hpp"
 #include "Tile.hpp"
 #include "Game.hpp"
-#include "FileHandler.hpp"
+#include "FileUtils.hpp"
 
 std::vector<std::vector<Tile>>& Level::getMap() {
     return map;
@@ -131,7 +131,7 @@ int Level::getHeight() {
 }
 
 Level::Level(std::string levelFilePath) {
-    std::string levelData = FileHandler::read_file(levelFilePath);
+    std::string levelData = files::read_file(levelFilePath);
     map = {{}};
     maxSupportedCharacters = 0;
 

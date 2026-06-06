@@ -8,7 +8,7 @@
 #include <algorithm>
 
 #include "Game.hpp"
-#include "ConsoleHandler.hpp"
+#include "ConsoleUtils.hpp"
 
 // this file holds implementations of Game members that are used during setup
 
@@ -74,7 +74,7 @@ void Game::loadPlayers(const int characterCount, const int AIcharacterCount) {
 
         } else {
             // this is a human
-            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, nameCounter) + ", please select a character class.");
+            console::slowPrintAndWait("Player " + std::string(1, nameCounter) + ", please select a character class.");
             CharacterClass cclass = static_cast<CharacterClass>(classQuery.query());
     
             characters.push_back(std::make_unique<Character>(

@@ -43,7 +43,7 @@ Character* Game::getClosestCharacterInRange(Character *character) {
 
     for (auto& ch: characters) {
         // pointDistance is used instead of pointInRange, because the distance is needed in multiple checks
-        float distance = MathUtils::pointDistance(
+        float distance = math::pointDistance(
             {ch->getXpos(), ch->getYpos()},
             {character->getXpos(), character->getYpos()}
         );

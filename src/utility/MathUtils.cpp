@@ -5,7 +5,7 @@
 #include <utility>
 #include <cmath>
 
-bool MathUtils::pointInRange(std::pair<int, int> centre, double radius, std::pair<int, int> point) {
+bool math::pointInRange(std::pair<int, int> centre, double radius, std::pair<int, int> point) {
 /*
     // calculate the distance between points using the pythagorean theorem
     double distance = std::sqrt(
@@ -25,7 +25,7 @@ bool MathUtils::pointInRange(std::pair<int, int> centre, double radius, std::pai
 }
 
 // returns a vector of all points on a line between to points using Bresenham's line algorithm
-std::vector<std::pair<int, int>> MathUtils::bresenhamsLineAlgorithm(std::pair<int, int> A, std::pair<int, int> B) {
+std::vector<std::pair<int, int>> math::bresenhamsLineAlgorithm(std::pair<int, int> A, std::pair<int, int> B) {
     std::vector<std::pair<int, int>> points;
 
     int x0 = A.first;
@@ -66,7 +66,7 @@ std::vector<std::pair<int, int>> MathUtils::bresenhamsLineAlgorithm(std::pair<in
     }
 }
 
-float MathUtils::pointDistance(std::pair<int, int> A, std::pair<int, int> B) {
+float math::pointDistance(std::pair<int, int> A, std::pair<int, int> B) {
     int dx = B.first - A.first;
     int dy = B.second - A.second;
 
