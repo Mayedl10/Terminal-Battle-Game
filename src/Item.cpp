@@ -90,7 +90,7 @@ bool Character::attemptPickup(Level *level) {
     return false;
 }
 
-ItemType Game::getRandomItemFromWeights() {    
+ItemType getRandomItemFromWeights(std::mt19937& rng) {    
     // static because these thigns aren't gonna change with every function call
     static constexpr std::array<ItemType, 7> items = {
         ItemType::IT_None,
@@ -129,7 +129,7 @@ void Game::distributeItems() {
     for (int y = 0; y < static_cast<int>(map.size()); y++) {
         for (int x = 0; x < static_cast<int>(map[y].size()); x++) {
             if (map[y][x].allowsItemSpawning()) {
-                map[y][x].item = getRandomItemFromWeights();
+                map[y][x].item = getRandomItemFromWeights(getRNG());
             }
         }
     }

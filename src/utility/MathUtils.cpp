@@ -1,4 +1,5 @@
 #include "MathUtils.hpp"
+#include "Character.hpp"
 
 #include <vector>
 #include <memory>
@@ -71,4 +72,31 @@ float math::pointDistance(std::pair<int, int> A, std::pair<int, int> B) {
     int dy = B.second - A.second;
 
     return std::sqrt(static_cast<float>(dx * dx + dy * dy));
+}
+
+Character* math::getClosestCharacterInRange(Character *character, std::deque<std::unique_ptr<Character>>& characters) {
+    float closestDist = MAXFLOAT;
+    Character *ret = character;
+
+    for (auto& ch: characters) {
+        // pointDistance is used instead of pointInRange, because the distance is needed in multiple checks
+        float distance = pointDistance(
+            {ch->getXpos(), ch->getYpos()},
+            {character->getXpos(), character->getYpos()}
+        );
+        if (
+            !(*ch == *character) // overloaded == on Character
+            &&
+            distance <= static_cast<float>(character->getRange())
+            &&
+            distance < closestDist
+            &&
+            ch->isAlive() // cant select dead players
+        ) {
+            closestDist = distance;
+            ret = ch.get();
+        }
+    }
+
+    return ret;
 }

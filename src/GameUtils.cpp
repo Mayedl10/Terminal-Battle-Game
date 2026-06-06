@@ -36,30 +36,3 @@ int Game::getLevelIdx() {
 void Game::setLevelIdx(int idx) {
     levelIdx = idx;
 }
-
-Character* Game::getClosestCharacterInRange(Character *character) {
-    float closestDist = MAXFLOAT;
-    Character *ret = character;
-
-    for (auto& ch: characters) {
-        // pointDistance is used instead of pointInRange, because the distance is needed in multiple checks
-        float distance = math::pointDistance(
-            {ch->getXpos(), ch->getYpos()},
-            {character->getXpos(), character->getYpos()}
-        );
-        if (
-            !(*ch == *character) // overloaded == on Character
-            &&
-            distance <= static_cast<float>(character->getRange())
-            &&
-            distance < closestDist
-            &&
-            ch->isAlive() // cant select dead players
-        ) {
-            closestDist = distance;
-            ret = ch.get();
-        }
-    }
-
-    return ret;
-}

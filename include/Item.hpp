@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <random>
+#include <string_view>
 
 enum ItemType : uint8_t {
     IT_Invalid,
@@ -41,3 +43,6 @@ constexpr std::string_view itemToString(ItemType type) {
         default:                    return "[UNKNOWN]";
     }
 }
+
+// weights are defined in enum ItemSpawnWeights
+ItemType getRandomItemFromWeights(std::mt19937& rng);

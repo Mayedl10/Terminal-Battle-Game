@@ -3,51 +3,37 @@
 #include <vector>
 #include <string>
 #include <deque>
-#include <string_view>
 #include <memory>
 #include <random>
-#include <utility>
-#include <variant>
-#include <optional>
 
 #include "Character.hpp"
 #include "Level.hpp"
+#include "ActionHandler.hpp"
+#include "AIHandler.hpp"
 
 class Game {
     std::deque<std::unique_ptr<Character>> characters;
     std::vector<std::unique_ptr<Level>> levels;
     int levelIdx;   // index for current level
     std::mt19937 rng;
+    std::unique_ptr<AIHandler> aiHandler;
+    std::unique_ptr<ActionHandler> actionHandler;
     
     void loadLevels(const std::string& levelFolderPath);
     void loadPlayers(const int characterCount, const int humanCharacterCount);
     void selectRandomLevel();
     void placePlayers();
     void enqueueFrontCharacter(); // moves the character at the front of the player deque to the back
+    void distributeItems(); // distributes items randomly across the map at the beginning of the game
     
     Level* getLevel();
     void setLevelIdx(int idx);
     int getLevelIdx();
     std::mt19937& getRNG();
-
-    // returns false if the attack failed
-    // if it succeeds, the function applies damage automatically
-    bool attemptAttack(Character *attacker, Character *target);
-    void characterAction(Character *character, QueryOptionsCharacterAction action);
-    void moveCharacter(Character *character, QueryOptionsCharacterAction direction, int distance);
-
-    // weights are defined in enum ItemSpawnWeights
-    ItemType getRandomItemFromWeights();
-    // distributes items randomly across the map at the beginning of the game
-    void distributeItems();
-
-    std::pair<QueryOptionsCharacterAction, std::optional<std::variant<Character*, int>>> pickActionAI();
-    Character* getClosestCharacterInRange(Character* character); // returns reference to the character itself if no other character is in range
-    std::pair<QueryOptionsCharacterAction, int> aiPickMovement();
-    void aiCharacterAction(Character* character, QueryOptionsCharacterAction action, std::optional<std::variant<Character*, int>> aiParameter);
-
+    
 public:
-
+    
+  
     // returns false if the game is over
     bool runGameCycle();
     void winScreen();

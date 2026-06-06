@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "Game.hpp"
-#include "Level.hpp"
 #include "ConsoleUtils.hpp"
 
 int main(int argc, char **argv) {
@@ -16,15 +15,16 @@ int main(int argc, char **argv) {
 
     try {
         while (game.runGameCycle()) { }
+        game.winScreen();
     }
     catch(const std::exception& e) {
         std::cerr << e.what() << '\n';
 
         std::cout << "[[AN ERROR OCCURRED AND THE GAME WAS CLOSED]]" << std::endl;
+        console::pressEnterToContinue();
+        return 1;
     }
 
-    game.winScreen();
-
     console::pressEnterToContinue();
-    
+    return 0;
 }

@@ -3,12 +3,12 @@
 #include <stdexcept>
 #include <iostream>
 
-#include "Game.hpp"
+#include "AIHandler.hpp"
 #include "Character.hpp"
-#include "ConsoleUtils.hpp"
+#include "MathUtils.hpp"
 
 // AI is part of game class, because this needs a lot of things from the game object to work
-std::pair<QueryOptionsCharacterAction, std::optional<std::variant<Character*, int>>> Game::pickActionAI() {
+std::pair<QueryOptionsCharacterAction, std::optional<std::variant<Character*, int>>> AIHandler::pickActionAI() {
     std::uniform_real_distribution<float> dist(0.0f, 1.0f);
     
     Character *current = characters.front().get();
@@ -19,7 +19,7 @@ std::pair<QueryOptionsCharacterAction, std::optional<std::variant<Character*, in
     }
 
     // is there a character in range?
-    Character *closest = getClosestCharacterInRange(current);
+    Character *closest = math::getClosestCharacterInRange(current, characters);
     
     // if no, return some movement thing
     if (*closest == *current) {
@@ -40,7 +40,7 @@ std::pair<QueryOptionsCharacterAction, std::optional<std::variant<Character*, in
     return {QueryOptionsCharacterAction::PASS, std::nullopt};
 }
 
-std::pair<QueryOptionsCharacterAction, int> Game::aiPickMovement() {
+std::pair<QueryOptionsCharacterAction, int> AIHandler::aiPickMovement() {
     Character *current = characters.front().get();
 
     // move in a random direction, the AI doesn't have to be very "I", after all
@@ -55,54 +55,7 @@ std::pair<QueryOptionsCharacterAction, int> Game::aiPickMovement() {
     std::uniform_int_distribution<int> speedDist(CharacterAttributes::minSpeed, current->getSpeed());
 
     return {
-        directions[directionDist(getRNG())],
-        speedDist(getRNG())
+        directions[directionDist(rng)],
+        speedDist(rng)
     };
-}
-
-// this entire function is a MESS because i designed these systems to work for humans first and foremost
-void Game::aiCharacterAction(Character *character, QueryOptionsCharacterAction action, std::optional<std::variant<Character*, int>> aiParameter) {
-    switch (action) {
-    case QueryOptionsCharacterAction::ATTACK: 
-        if (!aiParameter) {
-            throw std::runtime_error("Game::aiCharacterAction: missing parameter for action \"ATTACK\"");
-        }
-
-        if (!(std::holds_alternative<Character*>(aiParameter.value()))) {
-            throw std::runtime_error("Game::aiCharacterAction: received invalid parameter for action \"ATTACK\"");
-        }
-
-        
-        (void)attemptAttack(
-            character,
-            std::get<Character*>(aiParameter.value())
-        );
-    
-        break;
-
-    case QueryOptionsCharacterAction::STATUS:
-        throw std::runtime_error("Game::aiCharacterAction: AI character chose STATUS, which should not be possible.");
-        break;
-
-    case QueryOptionsCharacterAction::PASS:
-        throw std::runtime_error("Game::aiCharacterAction: AI character chose PASS, which should not be possible.");
-        break;
-
-    case QueryOptionsCharacterAction::USE_ITEM:
-        console::slowPrintAndWait("Player " + std::to_string(character->getNameUpper()) + " used an item: " + std::string(itemToString(character->getHeldItem())));
-        character->useHeldItem();
-        break;
-
-    default: // if it's none of the above, it's probably a direction. if it isn't, let moveCharacter throw an exception
-        if (!aiParameter) {
-            throw std::runtime_error("Game::aiCharacterAction: missing parameter for movement action");
-        }
-
-        if (!(std::holds_alternative<int>(aiParameter.value()))) {
-            throw std::runtime_error("Game::aiCharacterAction: invalid parameter for movement action");
-        }
-        
-        moveCharacter(character, action, std::get<int>(aiParameter.value()));
-        break;
-    }
 }

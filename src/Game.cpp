@@ -60,21 +60,19 @@ bool Game::runGameCycle() {
 
     // query front-of-queue character for an action or make AI decide
     QueryOptionsCharacterAction choice;
-    std::optional<std::variant<Character*, int>> secondAIParameter;
+    std::optional<std::variant<Character*, int>> AIParameter = std::nullopt;
     
     if (current->isHuman()) {
         choice = current->pickAction();
     } else {
-        auto aiChoice = pickActionAI();
+        auto aiChoice = aiHandler->pickActionAI();
         choice = aiChoice.first;
-        secondAIParameter = aiChoice.second;
+        AIParameter = aiChoice.second;
     }
 
     // execute actions
-    if (current->isHuman()) {
-        characterAction(current, choice);
-    } else {
-        aiCharacterAction(current, choice, secondAIParameter);
+    actionHandler->characterAction(current, choice, AIParameter);
+    if (!current->isHuman()) {
         console::waitForMilliseconds();
     }
 
@@ -98,212 +96,11 @@ bool Game::runGameCycle() {
     return true;
 }
 
-bool Game::attemptAttack(Character* attacker, Character* target) {
-    // note: the following setup would return true (walls aren't connected diagonally)
-    /*
-    B . . #
-    . . # .
-    . # . .
-    # . . A
-    */
-    // to prevent this, make walls "thick" when designing levels
-    /*
-    B . # #
-    . # # .
-    # # . .
-    # . . A
-    */
-
-    std::ostringstream ss;
-
-    ss << "Player " << attacker->getNameUpper() << " attempted an attack on " << target->getNameUpper() << "!" << std::endl;
-    console::slowPrint(ss.str());
-
-    std::pair<int, int> attPos = {
-        attacker->getXpos(),
-        attacker->getYpos()
-    };
-    std::pair<int, int> tarPos = {
-        target->getXpos(),
-        target->getYpos()
-    };
-
-    // return false if target is too far away
-    if (!math::pointInRange(attPos, static_cast<double>(attacker->getRange()), tarPos)) {
-        ss.str("");
-        ss.clear();
-        ss << "The attack failed because " << target->getNameUpper() << " was too far away." << std::endl;
-        console::slowPrintAndWait(ss.str(), 20, 2200);
-        return false;
-    }
-
-    // if target is in range, perform """raymarching""" to see if there is a wall obstructing the path.
-    // use Bresenham's line algorithm
-
-    auto& map = getLevel()->getMap();
-    auto line = math::bresenhamsLineAlgorithm(attPos, tarPos);
-
-    // check if any of the bresenham line points are walls
-    // return if any of them are
-    for (auto p: line) {
-        if (map[p.second][p.first].type == TileType::TT_Wall) {
-            ss.str("");
-            ss.clear();
-            ss << "The attack failed because there was a wall in the way." << std::endl;
-            console::slowPrintAndWait(ss.str(), 20, 2200);
-            return false;
-        } 
-    }
-
-    // attack is valid
-    float damageDealt = attacker->getStrength() * target->getDefense();
-    target->hurt(damageDealt);
-
-    ss.str("");
-    ss.clear();
-
-    ss << std::fixed << std::setprecision(2);
-    ss << "Player " << attacker->getNameUpper() << " dealt " << damageDealt << " points of damage to player " << target->getNameUpper() << "!";
-    console::slowPrintAndWait(ss.str());
-    
-    // if the attacker is an ai, there was already a sleep caused by Game::runGameCycle
-    if (attacker->isHuman()) {
-        console::waitForMilliseconds();
-    }
-
-    return true;
-}
-
-void Game::characterAction(Character *character, QueryOptionsCharacterAction action) {
-    switch (action) {
-    case QueryOptionsCharacterAction::ATTACK: {
-            // added scope around attack case to prevent a compile time error
-            // caused by target being accessible from other cases, even though
-            // it might not be initialised there
-            console::slowPrint("Who do you want to attack?");
-            Character *target = console::queryCharacter(characters);
-            (void)attemptAttack(character, target);
-        }
-        break;
-    case QueryOptionsCharacterAction::STATUS:
-        // print some information
-        // don't put character to the end of the queue!
-        // ^ handled by runGameCycle
-        character->printStatus();
-        console::pressEnterToContinue();
-        break;
-    case QueryOptionsCharacterAction::PASS:
-        // do nothing
-        // "pass" ... "i'm not doing anything this round"
-        break;
-    case QueryOptionsCharacterAction::USE_ITEM:
-        console::slowPrintAndWait("Player " + std::string(1, character->getNameUpper()) + " used an item: " + std::string(itemToString(character->getHeldItem())));
-        character->useHeldItem();
-        console::waitForMilliseconds();
-        break;
-    default: // if it's none of the above, it's probably a direction. if it isn't, let moveCharacter throw an exception
-        // query distance
-        console::slowPrint("How far do you want to go?");
-        int dist = console::readIntInRange(1, character->getSpeed());
-        moveCharacter(character, action, dist);
-        break;
-    }
-}
-
-void Game::moveCharacter(Character *character, QueryOptionsCharacterAction direction, int distance) {
-    if (distance <= 0 || distance > character->getSpeed()) {
-        throw std::invalid_argument(
-            "Game::moveCharacter: invalid argument <distance>: " + std::to_string(distance)
-            + " is out of range for <character>: " + std::to_string(character->getNameUpper()) 
-            + " with maximum <speed>: " + std::to_string(character->getSpeed())
-        );
-    }
-    
-    Level *level = getLevel();
-
-    switch (direction) {
-    case QueryOptionsCharacterAction::MOVE_N:
-        while (distance > 0) {
-            int nextY = character->getYpos() -1;
-
-            if (nextY < 0) {
-                break; // out of bounds
-            }
-            auto nextTile = level->getTileTypeAt(character->getXpos(), nextY);
-            if (nextTile == TileType::TT_Hole || nextTile == TileType::TT_Wall) {
-                break; // hit a wall/hole
-            }
-
-            // movement is valid
-            character->setYpos(nextY);
-            distance--;
-        }
-        break;
-    case QueryOptionsCharacterAction::MOVE_E:
-        while (distance > 0) {
-            int nextX = character->getXpos() +1;
-
-            if (nextX > level->getWidth()-1) {
-                break; // out of bounds
-            }
-            auto nextTile = level->getTileTypeAt(nextX, character->getYpos());
-            if (nextTile == TileType::TT_Hole || nextTile == TileType::TT_Wall) {
-                break; // hit a wall/hole
-            }
-
-            // movement is valid
-            character->setXpos(nextX);
-            distance--;
-        }
-        break;
-    case QueryOptionsCharacterAction::MOVE_S:
-        while (distance > 0) {
-            int nextY = character->getYpos() +1;
-
-            if (nextY > level->getHeight()-1) {
-                break; // out of bounds
-            }
-            auto nextTile = level->getTileTypeAt(character->getXpos(), nextY);
-            if (nextTile == TileType::TT_Hole || nextTile == TileType::TT_Wall) {
-                break; // hit a wall/hole
-            }
-
-            // movement is valid
-            character->setYpos(nextY);
-            distance--;
-        }
-        break;
-    case QueryOptionsCharacterAction::MOVE_W:
-        while (distance > 0) {
-            int nextX = character->getXpos() -1;
-
-            if (nextX < 0) {
-                break; // out of bounds
-            }
-            auto nextTile = level->getTileTypeAt(nextX, character->getYpos());
-            if (nextTile == TileType::TT_Hole || nextTile == TileType::TT_Wall) {
-                break; // hit a wall/hole
-            }
-
-            // movement is valid
-            character->setXpos(nextX);
-            distance--;
-        }
-        break;
-    default:
-        throw std::invalid_argument("Game::moveCharacter: invalid argument <direction>: " + std::to_string(direction));
-        break;
-    }
-
-    std::ostringstream ss;
-    ss << "Player " << character->getNameUpper() << " moved to (" << character->getXpos() << ", " << character->getYpos() << ")" << std::endl;
-    console::slowPrintAndWait(ss.str());
-}
-
-Game::Game(const std::string& levelFolderPath, const int characterCount, const int AIcharacterCount) {
+Game::Game(const std::string& levelFolderPath, const int characterCount, const int AIcharacterCount)
+    : rng{std::mt19937(std::chrono::high_resolution_clock::now().time_since_epoch().count())}
+    {
     console::clearScreen();
     // seed random number engine with unix epoch
-    rng = std::mt19937(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 
     loadLevels(levelFolderPath);
     loadPlayers(characterCount, AIcharacterCount);
@@ -311,6 +108,9 @@ Game::Game(const std::string& levelFolderPath, const int characterCount, const i
     selectRandomLevel();
     placePlayers();
     distributeItems();  // randomly spawn items on regular floor tiles 
+
+    actionHandler = std::make_unique<ActionHandler>(characters, getLevel());
+    aiHandler = std::make_unique<AIHandler>(characters, rng);
 
     /*
     * sort characters by speed
