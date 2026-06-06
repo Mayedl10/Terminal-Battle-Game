@@ -250,6 +250,6 @@ void ActionHandler::moveCharacter(Character *character, QueryOptionsCharacterAct
     }
 
     std::ostringstream ss;
-    ss << "Player " << character->getNameUpper() << " moved to (" << character->getXpos() << ", " << character->getYpos() << ")" << std::endl;
+    ss << "Player " << character->getNameUpper() << " moved to (" << character->getXpos() << ", " << character->getYpos() << ")";
     console::slowPrintAndWait(ss.str());
 }

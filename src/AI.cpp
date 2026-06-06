@@ -7,7 +7,6 @@
 #include "Character.hpp"
 #include "MathUtils.hpp"
 
-// AI is part of game class, because this needs a lot of things from the game object to work
 std::pair<QueryOptionsCharacterAction, std::optional<std::variant<Character*, int>>> AIHandler::pickActionAI() {
     std::uniform_real_distribution<float> dist(0.0f, 1.0f);
     
