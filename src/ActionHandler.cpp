@@ -29,7 +29,7 @@ bool ActionHandler::attemptAttack(Character *attacker, Character *target) {
 
     std::ostringstream ss;
 
-    ss << "Player " << attacker->getNameUpper() << " attempted an attack on " << target->getNameUpper() << "!" << std::endl;
+    ss << "Player " << attacker->getNameUpper() << " attempted an attack on " << target->getNameUpper() << "!";
     console::slowPrint(ss.str());
 
     std::pair<int, int> attPos = {
@@ -163,7 +163,7 @@ void ActionHandler::moveCharacter(Character *character, QueryOptionsCharacterAct
     if (distance <= 0 || distance > character->getSpeed()) {
         throw std::invalid_argument(
             "Game::moveCharacter: invalid argument <distance>: " + std::to_string(distance)
-            + " is out of range for <character>: " + std::to_string(character->getNameUpper()) 
+            + " is out of range for <character>: " + std::string(1, character->getNameUpper()) 
             + " with maximum <speed>: " + std::to_string(character->getSpeed())
         );
     }

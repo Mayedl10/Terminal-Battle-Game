@@ -5,6 +5,8 @@
 #include <memory>
 #include <utility>
 #include <cmath>
+#include <cstdint>
+#include <limits>
 
 bool math::pointInRange(std::pair<int, int> centre, double radius, std::pair<int, int> point) {
 /*
@@ -19,8 +21,8 @@ bool math::pointInRange(std::pair<int, int> centre, double radius, std::pair<int
 
     // optimised version without sqrt - compares squares of numbers directly
 
-    int dx = point.first - centre.first;
-    int dy = point.second - centre.second;
+    int64_t dx = point.first - centre.first;
+    int64_t dy = point.second - centre.second;
 
     return dx * dx + dy * dy <= radius * radius;
 }
@@ -75,7 +77,7 @@ float math::pointDistance(std::pair<int, int> A, std::pair<int, int> B) {
 }
 
 Character* math::getClosestCharacterInRange(Character *character, std::deque<std::unique_ptr<Character>>& characters) {
-    float closestDist = MAXFLOAT;
+    float closestDist = std::numeric_limits<float>::max();
     Character *ret = character;
 
     for (auto& ch: characters) {

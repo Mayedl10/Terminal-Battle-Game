@@ -10,10 +10,9 @@ int main(int argc, char **argv) {
     // note: this makes iostream no longer thread safe and detaches CPP's buffers
     // from C's buffers (ie. use mutexes around IO operations and dont use C's IO stuff)
     std::ios_base::sync_with_stdio(false);
-
-    Game game("./leveldata/debug/", 2, 1);
-
+    
     try {
+        Game game("./leveldata/debug/", 2, 1);
         while (game.runGameCycle()) { }
         game.winScreen();
     }

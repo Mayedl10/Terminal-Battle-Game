@@ -109,10 +109,16 @@ void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
 }
 
 TileType Level::getTileTypeAt(int x, int y) {
-    return map[y][x].type;
+    return getTileAt(x, y).type;
 }
 
 Tile& Level::getTileAt(int x, int y) {
+    if (x < 0 || y < 0) {
+        throw std::invalid_argument("Level::getTileTypeAt: received negative argument(s)");
+    }
+    if (static_cast<size_t>(y) >= map.size() || static_cast<size_t>(x) >= map[y].size()) {
+        throw std::invalid_argument("Level::getTileTypeAt: received out-of-bounds argument(s)");
+    }
     return map[y][x];
 }
 
@@ -170,6 +176,16 @@ Level::Level(std::string levelFilePath) {
         default:
             map.back().push_back({TileType::TT_Invalid, true, true, ItemType::IT_None});
             break;
+        }
+    }
+
+    if (map.empty()) {
+        throw std::runtime_error("Level::Level: cannot initialise empty level object based on: " + levelFilePath + "\nFile is empty.");
+    }
+
+    for (auto& y: map) {
+        if (y.empty()) {
+            throw std::runtime_error("Level::Level: cannot initialise level object based on " + levelFilePath + "\nMake sure the file contains no extra whitespace (newlines, spaces, tabs, ...).");
         }
     }
 

@@ -94,6 +94,9 @@ int Character::getXpos() {
 }
 
 void Character::setXpos(int newXpos) {
+    if (newXpos < 0) {
+        throw std::invalid_argument("Character::setXpos: got negative value for newXpos on Character " + std::string(1, getName()));
+    }
     xpos = newXpos;
 }
 
@@ -102,6 +105,9 @@ int Character::getYpos() {
 }
 
 void Character::setYpos(int newYpos) {
+    if (newYpos < 0) {
+        throw std::invalid_argument("Character::setYpos: got negative value for newYpos on Character " + std::string(1, getName()));
+    }
     ypos = newYpos;
 }
 
@@ -122,7 +128,7 @@ char Character::getName() const {
         return name;
     } else {
         // return lowercase name if character isnt human
-        return static_cast<char>(std::tolower(name));
+        return static_cast<char>(std::tolower(static_cast<unsigned char>(name)));
     }
 }
 

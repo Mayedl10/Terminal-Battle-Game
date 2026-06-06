@@ -25,7 +25,7 @@ void Character::useHeldItem() {
 
     switch (heldItem) {
         case IT_Invalid:
-            throw std::runtime_error("Character::useHeldItem: encountered character with invalid item type: " + getName());
+            throw std::runtime_error("Character::useHeldItem: encountered character with invalid item type: " + std::string(1, getName()));
             break;
         case IT_None:
             console::slowPrintAndWait("You cannot use an item unless you are holding one!");
@@ -58,7 +58,7 @@ void Character::useHeldItem() {
             break;
         default:
             // shouldnt happen
-            throw std::runtime_error("Character::useHeldItem: encountered character with unknown held item type: " + std::to_string(heldItem) + ". Character: " + getName());
+            throw std::runtime_error("Character::useHeldItem: encountered character with unknown held item type: " + std::to_string(heldItem) + ". Character: " + std::string(1, getName()));
             break;
     }
 
