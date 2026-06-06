@@ -81,7 +81,7 @@ bool Game::runGameCycle() {
         // the variable "pickup" is only used to make the code more "readable"
         bool pickup = ch->attemptPickup(getLevel());
         if (pickup) {
-            std::cout << "Player " << ch->getNameUpper() << " picked up an item!" << std::endl;
+            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, ch->getNameUpper()) + " picked up an item!");
             ConsoleHandler::waitForMilliseconds();
         }
     }
@@ -181,7 +181,7 @@ void Game::characterAction(Character *character, QueryOptionsCharacterAction act
         // "pass" ... "i'm not doing anything this round"
         break;
     case QueryOptionsCharacterAction::USE_ITEM:
-        std::cout << "Player " << character->getNameUpper() << " used an item: [todo - implement proper item printing]" << std::endl;
+        ConsoleHandler::slowPrintAndWait("Player " + std::string(1, character->getNameUpper()) + " used an item: " + std::string(itemToString(character->getHeldItem())));
         character->useHeldItem();
         ConsoleHandler::waitForMilliseconds();
         break;

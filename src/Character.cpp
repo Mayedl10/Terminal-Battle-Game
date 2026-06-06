@@ -2,6 +2,7 @@
 #include "Item.hpp"
 #include "Classes.hpp"
 #include "InputQuery.hpp"
+#include "ConsoleHandler.hpp"
 
 #include <iostream>
 #include <vector>
@@ -160,15 +161,18 @@ QueryOptionsCharacterAction Character::pickAction() {
 }
 
 void Character::printStatus() {
-    std::cout << "Status for Character " << getNameUpper() << ":\n"
-    << "\tHealth: " << getHealth() << "HP\n"
-    << "\tStrength: " << getStrength() << "\n"
-    << "\tSpeed: " << getSpeed() << "\n"
-    << "\tRange: " << getRange() << "\n"
-    << "\tPosition: (" << getXpos()+1 << ", " << getYpos()+1 << ")\n"
-    << "\tDefense: " << getDefense() << "\n"
-    << "\tHeld Item: " << static_cast<int>(heldItem) << " [TODO: implement proper item printing]"
-    << std::endl;
+
+    ConsoleHandler::slowPrintAndWait(
+        "Status for Character "     + std::to_string(getNameUpper()) + ":\n"
+        + "\tHealth: "              + std::to_string(getHealth()) + "HP\n"
+        + "\tStrength: "            + std::to_string(getStrength()) + "\n"
+        + "\tSpeed: "               + std::to_string(getSpeed()) + "\n"
+        + "\tRange: "               + std::to_string(getRange()) + "\n"
+        + "\tPosition: ("           + std::to_string(getXpos()+1) + ", " + std::to_string(getYpos()+1) + ")\n"
+        + "\tDefense: "             + std::to_string(getDefense()) + "\n"
+        + "\tHeld Item: "           + std::to_string(static_cast<int>(heldItem)) + " [TODO: implement proper item printing]"
+    );
+    
 }
 
 void Character::initialiseQueryObject() {

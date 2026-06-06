@@ -104,6 +104,8 @@ public:
     void setIsHuman(bool isHuman);
     
     bool isAlive();
+
+    ItemType getHeldItem();
     bool hasItem();
     
     void hurt(float damage);

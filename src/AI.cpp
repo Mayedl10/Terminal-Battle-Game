@@ -89,7 +89,7 @@ void Game::aiCharacterAction(Character *character, QueryOptionsCharacterAction a
         break;
 
     case QueryOptionsCharacterAction::USE_ITEM:
-        std::cout << "Player " << character->getNameUpper() << " used an item: [todo - implement proper item printing]" << std::endl;
+        ConsoleHandler::slowPrintAndWait("Player " + std::to_string(character->getNameUpper()) + " used an item: " + std::string(itemToString(character->getHeldItem())));
         character->useHeldItem();
         break;
 

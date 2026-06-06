@@ -4,6 +4,7 @@
 // (plus, it cant hurt to keep item-related logic close together)
 #include "Character.hpp"
 #include "Game.hpp"
+#include "ConsoleHandler.hpp"
 
 #include <array>
 #include <stdexcept>
@@ -21,33 +22,33 @@ void Character::useHeldItem() {
             throw std::runtime_error("Character::useHeldItem: encountered character with invalid item type: " + getName());
             break;
         case IT_None:
-            std::cout << "You cannot use an item unless you are holding one!" << std::endl;
+            ConsoleHandler::slowPrintAndWait("You cannot use an item unless you are holding one!");
             break;
         case IT_HealthPotion:
             restoreHealth(10.0);
-            std::cout << "Player " << getNameUpper() << " restored some HP!" << std::endl;
+            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, getNameUpper()) + " restored some HP!");
             break;
         case IT_SpeedPotion:
             setSpeed(getSpeed() +2);
-            std::cout << "Player " << getNameUpper() << " raised their speed!" << std::endl;
+            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, getNameUpper()) + " raised their speed!");
             break;
         case IT_TurtlePotion:
             setSpeed(getSpeed() -3);
             setDefense(getDefense() *1.5f);
-            std::cout << "Player " << getNameUpper() << " became like a turtle!" << std::endl;
+            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, getNameUpper()) + " became like a turtle!");
             break;
         case IT_HealthPotion_II:
             restoreHealth(15.0);
-            std::cout << "Player " << getNameUpper() << " restored a lot of HP!" << std::endl;
+            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, getNameUpper()) + " restored a lot of HP!");
             break;
         case IT_SpeedPotion_II:
             setSpeed(getSpeed() +3);
-            std::cout << "Player " << getNameUpper() << " drastically raised their speed!" << std::endl;
+            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, getNameUpper()) + " drastically raised their speed!");
             break;
         case IT_TurtlePotion_II:
             setSpeed(getSpeed() -4);
             setDefense(getDefense() *1.8f);
-            std::cout << "Player " << getNameUpper() << " became a lot like a turtle!" << std::endl;
+            ConsoleHandler::slowPrintAndWait("Player " + std::string(1, getNameUpper()) + " became a lot like a turtle!");
             break;
         default:
             // shouldnt happen
@@ -55,6 +56,10 @@ void Character::useHeldItem() {
             break;
     }
     heldItem = ItemType::IT_None;
+}
+
+ItemType Character::getHeldItem() {
+    return heldItem;
 }
 
 bool Character::hasItem() {

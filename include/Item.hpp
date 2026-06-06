@@ -27,3 +27,17 @@ enum ItemSpawnWeights : int {
     ISW_SpeedPotion_II  = 8,
     ISW_TurtlePotion_II = 8,
 };
+
+constexpr std::string_view itemToString(ItemType type) {
+    switch (type) {
+        case IT_Invalid:            return "[INVALID]";
+        case IT_None:               return "";
+        case IT_HealthPotion:       return "Health Potion";
+        case IT_SpeedPotion:        return "Speed Potion";
+        case IT_TurtlePotion:       return "Turtle Potion";
+        case IT_HealthPotion_II:    return "Strong Health Potion";
+        case IT_SpeedPotion_II:     return "Strong Speed Potion";
+        case IT_TurtlePotion_II:    return "Strong Turtle Potion";
+        default:                    return "[UNKNOWN]";
+    }
+}

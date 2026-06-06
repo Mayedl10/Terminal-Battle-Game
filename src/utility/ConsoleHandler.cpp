@@ -31,7 +31,7 @@ int ConsoleHandler::readInteger() {
         if (std::cin >> val) break; // successful read -> break, continue if input is invalid
         std::cin.clear();   // clear fail state
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard line
-        std::cout << "Input must be a valid integer. Please try again." << std::endl;
+        slowPrint("Input must be a valid integer. Please try again.");
     }
     return val;
 }
@@ -40,7 +40,7 @@ int ConsoleHandler::readIntInRange(int lower, int upper) {
     while (true) {
         int choice = readInteger();
         if (choice >= lower && choice <= upper) return choice;
-        std::cout << "Input must be a number >= " << lower << " and <= " << upper << std::endl;
+        slowPrint("Input must be a number >= " + std::to_string(lower) + " and <= " + std::to_string(upper));
     }
 }
 
@@ -52,7 +52,7 @@ Character* ConsoleHandler::queryCharacter(std::deque<std::unique_ptr<Character>>
         if (!(std::cin >> choice)) {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "Input must be a valid character. Please try again." << std::endl;
+            slowPrint("Input must be a valid character. Please try again.");
             continue;
         }
 
@@ -60,7 +60,7 @@ Character* ConsoleHandler::queryCharacter(std::deque<std::unique_ptr<Character>>
 
         const char selectedName = static_cast<char>(std::toupper(static_cast<unsigned char>(choice)));
         if (selectedName < 'A' || selectedName > 'Z') {
-            std::cout << "Input must be a letter between A and Z. Please try again." << std::endl;
+            slowPrint("Input must be a letter between A and Z. Please try again.");
             continue;
         }
 
@@ -70,7 +70,7 @@ Character* ConsoleHandler::queryCharacter(std::deque<std::unique_ptr<Character>>
             }
         }
 
-        std::cout << "No living character with that name exists. Please try again." << std::endl;
+        slowPrint("No living character with that name exists. Please try again.");
     }
 }
 

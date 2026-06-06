@@ -22,7 +22,7 @@ int InputQuery::query() {
         throw std::runtime_error("InputQuery::query: cannot produce valid query without any enabled options");
     }
 
-    std::cout << "Please select one of the following options" << std::endl;
+    ConsoleHandler::slowPrint("Please select one of the following options");
     for (int i = 0; i < static_cast<int>(options.size()); i++) {
         if (options[i].isVisible) // skip disabled options
             std::cout << "[" << i+1 << "] " << options[i].message << std::endl;
@@ -36,7 +36,7 @@ int InputQuery::query() {
         idx = ConsoleHandler::readIntInRange(1, static_cast<int>(options.size()));
 
         if (!options[idx-1].isVisible) {
-            std::cout << "Please select a valid option. Some options have been disabled." << std::endl;
+            ConsoleHandler::slowPrint("Please select a valid option. Some options have been disabled.");
         }
 
         // handle disabled options
