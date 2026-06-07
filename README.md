@@ -11,7 +11,7 @@ Level files are very visual. Every character represents a tile.
     - this is where characters can spawn
     - number of `@`s determines max players per level
 
-The edges of the map act like walls. Tiles with items are displayed as `!`.
+The edges of the map act like walls.
 
 Example level:
 ```
@@ -20,9 +20,9 @@ Example level:
 #.@..#...
 #...#....
 ...#.....
-......OO.
-....OO...
-...O...@.
+......**.
+....**...
+...*...@.
 .........
 ```
 
