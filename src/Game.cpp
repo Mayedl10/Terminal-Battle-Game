@@ -82,7 +82,9 @@ bool Game::runGameCycle() {
         // the variable "pickup" is only used to make the code more "readable"
         bool pickup = ch->attemptPickup(getLevel());
         if (pickup) {
-            console::slowPrintAndWait("Player " + std::string(1, ch->getNameUpper()) + " picked up an item!");
+            std::ostringstream ss;
+            ss << "Player " << ch->getNameUpper() << " picked up an item: " << itemToString(ch->getHeldItem());
+            console::slowPrint(ss.str());
             console::waitForMilliseconds();
         }
     }

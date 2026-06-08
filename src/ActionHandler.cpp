@@ -148,7 +148,7 @@ void ActionHandler::characterAction(Character *character, QueryOptionsCharacterA
         
         if (character->isHuman()) {
             // query distance
-            console::slowPrint("How far do you want to go?");
+            console::slowPrint("How far do you want to go? Maximum distance: " + std::to_string(character->getSpeed()) + " tiles.");
             int dist = console::readIntInRange(1, character->getSpeed());
             moveCharacter(character, action, dist);
         } else {
