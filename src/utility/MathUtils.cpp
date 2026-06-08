@@ -24,7 +24,7 @@ bool math::pointInRange(std::pair<int, int> centre, double radius, std::pair<int
     int64_t dx = point.first - centre.first;
     int64_t dy = point.second - centre.second;
 
-    return dx * dx + dy * dy <= radius * radius;
+    return static_cast<double>(dx * dx + dy * dy) <= radius * radius;
 }
 
 // returns a vector of all points on a line between to points using Bresenham's line algorithm

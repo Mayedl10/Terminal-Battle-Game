@@ -23,7 +23,7 @@ int Level::getMaxSupportedCharacters() {
     return maxSupportedCharacters;
 }
 
-static uint64_t packOccupancyMapIndex(int y, int x) {
+static uint64_t packOccupancyMapIndex(int32_t y, int32_t x) {
 // using signed parameters so i can notice bugs where coordinates become negative more easily.
 // there is currently no known bug like that, but it can't hurt to have safeguards in place
     if (y < 0 || x < 0) {
@@ -40,9 +40,10 @@ void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
     for (auto& ch: players) {
         if (!ch->isAlive()) continue; // skip dead players
         
+        // int isn't technically guaranteed to be 32 bit
         uint64_t index = packOccupancyMapIndex(
-            ch->getYpos(),
-            ch->getXpos()
+            int32_t{ch->getYpos()},
+            int32_t{ch->getXpos()}
         );
         occupancyMap[index].push_back(ch.get());
         // note: .at() throws an exception when the index doesnt exist, but operator[] creates the element
@@ -60,7 +61,11 @@ void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
 
 
             // this approach doesn't create every vector every time, like just checking operator[] would
-            auto idx = packOccupancyMapIndex(y, x);
+            // int isn't technically guaranteed to be 32 bit
+            auto idx = packOccupancyMapIndex(
+                int32_t{y},
+                int32_t{x}
+            );
             auto it = occupancyMap.find(idx);
             size_t playerCount = 0;
             if (it != occupancyMap.end()) {

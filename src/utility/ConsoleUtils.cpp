@@ -109,7 +109,7 @@ void console::waitForMilliseconds(int ms) {
 }
 
 void console::printHealthBar(float hp) {
-    int count = std::ceil(hp/5.0f); // one "segment" of the health bar ~ 5HP
+    int count = static_cast<int>(std::ceil(hp/5.0f)); // one "segment" of the health bar ~ 5HP
     std::cout << "[";
 
     if (count == 1) {
