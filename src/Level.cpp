@@ -33,6 +33,27 @@ static uint64_t packOccupancyMapIndex(int32_t y, int32_t x) {
     return (static_cast<uint64_t>(y) << 32) | x;
 }
 
+void Level::validateShape(const std::string& levelFilePath) {
+
+    // technically dead code because map is initialised as {{}}
+    if (map.empty()) {
+        throw std::runtime_error("Level::Level: cannot initialise empty level object based on: " + levelFilePath + "\nFile is empty.");
+    }
+
+    for (auto& y: map) {
+        if (y.empty()) {
+            throw std::runtime_error("Level::Level: cannot initialise level object based on " + levelFilePath + "\nMake sure the file contains no extra whitespace (newlines, spaces, tabs, ...).");
+        }
+    }
+
+    size_t yDim = map[0].size();
+    for (auto& y: map) {
+        if (y.size() != yDim) {
+            throw std::runtime_error("Level::Level: level " + levelFilePath + " is not a valid shape.");
+        }
+    }
+}
+
 void Level::displayLevel(std::deque<std::unique_ptr<Character>>& players) {
     std::unordered_map<uint64_t, std::vector<Character*>> occupancyMap;
 
@@ -211,14 +232,7 @@ Level::Level(std::string levelFilePath) {
         }
     }
 
-    if (map.empty()) {
-        throw std::runtime_error("Level::Level: cannot initialise empty level object based on: " + levelFilePath + "\nFile is empty.");
-    }
-
-    for (auto& y: map) {
-        if (y.empty()) {
-            throw std::runtime_error("Level::Level: cannot initialise level object based on " + levelFilePath + "\nMake sure the file contains no extra whitespace (newlines, spaces, tabs, ...).");
-        }
-    }
+    // throw if level is malformed
+    validateShape(levelFilePath);
 
 }

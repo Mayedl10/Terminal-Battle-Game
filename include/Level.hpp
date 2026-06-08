@@ -19,6 +19,7 @@ class Level {
     // map[y][x] returns the tile at position (x, y)
     std::vector<std::vector<Tile>> map; 
     int maxSupportedCharacters;
+    void validateShape(const std::string& levelFilePath);
 
 public:
 
