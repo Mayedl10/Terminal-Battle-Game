@@ -28,7 +28,10 @@ int console::readInteger() {
     int val;
     while (true) {
         std::cout << "> ";
-        if (std::cin >> val) break; // successful read -> break, continue if input is invalid
+        if (std::cin >> val) {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard line
+            break; // successful read -> break, continue if input is invalid
+        }
         std::cin.clear();   // clear fail state
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard line
         slowPrint("Input must be a valid integer. Please try again.");
