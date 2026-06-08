@@ -94,10 +94,10 @@ bool ActionHandler::attemptAttack(Character *attacker, Character *target) {
     return true;
 }
 
-void ActionHandler::characterAction(Character *character, QueryOptionsCharacterAction action, std::optional<std::variant<Character*, int>> aiParameter) {
+void ActionHandler::characterAction(Character *character, QueryOptionsCharacterAction action, std::optional<std::variant<Character*, int>> aiParameter, bool actsAsHuman) {
     switch (action) {
     case QueryOptionsCharacterAction::ATTACK: 
-        if (character->isHuman()) {
+        if (actsAsHuman) {
             console::slowPrint("Who do you want to attack?");
             Character *target = console::queryCharacter(characters);
             (void)attemptAttack(character, target);
@@ -121,8 +121,8 @@ void ActionHandler::characterAction(Character *character, QueryOptionsCharacterA
         // print some information
         // don't put character to the end of the queue!
         // ^ handled by runGameCycle
-        if (!character->isHuman()) {
-            throw std::runtime_error("Game::aiCharacterAction: AI character chose STATUS, which should not be possible.");
+        if (!actsAsHuman) {
+            throw std::runtime_error("Game::aiCharacterAction: AI character or character acting as AI chose STATUS, which should not be possible.");
         }
         character->printStatus();
         console::pressEnterToContinue();
@@ -131,24 +131,24 @@ void ActionHandler::characterAction(Character *character, QueryOptionsCharacterA
     case QueryOptionsCharacterAction::PASS:
         // do nothing
         // "pass" ... "i'm not doing anything this round"
-        if (!character->isHuman()) {
-            throw std::runtime_error("Game::aiCharacterAction: AI character chose PASS, which should not be possible.");
+        if (!actsAsHuman) {
+            throw std::runtime_error("Game::aiCharacterAction: AI character or character acting as AI chose PASS, which should not be possible.");
         }
         break;
 
     case QueryOptionsCharacterAction::USE_ITEM:
         console::slowPrintAndWait("Player " + std::string(1, character->getNameUpper()) + " used an item: " + std::string(itemToString(character->getHeldItem())));
         character->useHeldItem();
-        if (character->isHuman()) {
+        if (actsAsHuman) {
             console::waitForMilliseconds();
         }
         break;
 
     default: // if it's none of the above, it's probably a direction. if it isn't, let moveCharacter throw an exception
         
-        if (character->isHuman()) {
+        if (actsAsHuman) {
             // query distance
-            console::slowPrint("How far do you want to go? Maximum distance: " + std::to_string(character->getSpeed()) + " tiles.");
+            console::slowPrint("How far do you want to go? Maximum distance: " + std::to_string(character->getSpeed()) + " tile(s).");
             int dist = console::readIntInRange(1, character->getSpeed());
             moveCharacter(character, action, dist);
         } else {

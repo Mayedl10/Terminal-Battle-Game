@@ -56,24 +56,25 @@ bool Game::runGameCycle() {
     // hide/show "use item" actions
     current->getQueryObject().setVisibility(QueryOptionsCharacterAction::USE_ITEM, current->hasItem());
 
-    // the following two if statements could be merged into one, but the
-    // current structure makes the control flow easier to understand
-
     // query front-of-queue character for an action or make AI decide
-    QueryOptionsCharacterAction choice;
+    QueryOptionsCharacterAction choice = QueryOptionsCharacterAction::PASS; // default
     std::optional<std::variant<Character*, int>> AIParameter = std::nullopt;
     
     if (current->isHuman()) {
         choice = current->pickAction();
-    } else {
+    }
+
+    bool actsAsHuman = (current->isHuman() && choice != QueryOptionsCharacterAction::LET_AI_DECIDE);
+
+    if (!actsAsHuman) {
         auto aiChoice = aiHandler->pickActionAI();
         choice = aiChoice.first;
         AIParameter = aiChoice.second;
     }
 
     // execute actions
-    actionHandler->characterAction(current, choice, AIParameter);
-    if (!current->isHuman()) {
+    actionHandler->characterAction(current, choice, AIParameter, actsAsHuman);
+    if (!actsAsHuman) {
         console::waitForMilliseconds();
     }
 

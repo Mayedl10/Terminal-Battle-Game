@@ -197,6 +197,7 @@ void Character::initialiseQueryObject() {
         {"Move W", true, QueryOptionsCharacterAction::MOVE_W},
         {"Attack", true, QueryOptionsCharacterAction::ATTACK},
         {"Get Status", true, QueryOptionsCharacterAction::STATUS},
+        {"Let AI decide", true, QueryOptionsCharacterAction::LET_AI_DECIDE},
         {"Do Nothing", true, QueryOptionsCharacterAction::PASS},
         {"Use Item", false, QueryOptionsCharacterAction::USE_ITEM}     // hidden when character doesn't have an item
     });

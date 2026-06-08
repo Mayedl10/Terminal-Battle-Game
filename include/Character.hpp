@@ -44,6 +44,7 @@ enum QueryOptionsCharacterAction :int {
     MOVE_W,
     ATTACK,
     STATUS,
+    LET_AI_DECIDE,
     PASS,
     USE_ITEM
 };
