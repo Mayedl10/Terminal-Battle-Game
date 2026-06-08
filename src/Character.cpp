@@ -120,7 +120,9 @@ void Character::setIsHuman(bool isHuman) {
 }
 
 bool Character::isAlive() {
-    return (getHealth() > 0);
+    // hp < counts as dead
+    // floating point errors sometimes caused players to be alive with 1E-9 HP
+    return (getHealth() >= 0.1f);
 }
 
 char Character::getName() const {

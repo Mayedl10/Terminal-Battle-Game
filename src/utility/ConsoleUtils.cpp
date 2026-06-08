@@ -109,7 +109,10 @@ void console::waitForMilliseconds(int ms) {
 }
 
 void console::printHealthBar(float hp) {
-    int count = static_cast<int>(std::ceil(hp/5.0f)); // one "segment" of the health bar ~ 5HP
+    float epsilon = 0.00001f;
+    // hp-epsilon because:
+    // floating point errors would cause small differences that could cause addittional #s (eg 40->8, aber 40.00...1->9)
+    int count = static_cast<int>(std::ceil((hp-epsilon)/5.0f)); // one "segment" of the health bar ~ 5HP
     std::cout << "[";
 
     if (count == 1) {
