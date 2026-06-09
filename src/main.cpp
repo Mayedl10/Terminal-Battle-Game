@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
     // from C's buffers (ie. use mutexes around IO operations and dont use C's IO stuff)
     std::ios_base::sync_with_stdio(false);
     
-    auto config = TitleScreen::display();
+    auto config = titlescreen::display();
     if (!config) {
         return 0;
     }

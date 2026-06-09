@@ -54,7 +54,7 @@ GameConfig grabGameConfiguration() {
 }
 }
 
-std::optional<GameConfig> TitleScreen::display() {
+std::optional<GameConfig> titlescreen::display() {
 
     console::clearScreen();
     std::cout << console::style::Bold << ">> TERMINAL BATTLE GAME <<" << console::style::Reset

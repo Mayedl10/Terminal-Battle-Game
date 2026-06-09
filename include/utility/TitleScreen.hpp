@@ -12,6 +12,6 @@ struct GameConfig {
     {}
 };
 
-namespace TitleScreen {
+namespace titlescreen {
     std::optional<GameConfig> display();
 };
