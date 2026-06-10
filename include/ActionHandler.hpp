@@ -13,7 +13,7 @@ public:
 
     // returns false if the attack failed
     // if it succeeds, the function applies damage automatically
-    bool attemptAttack(Character *attacker, Character *target);
+    bool attemptAttack(Character *attacker, Character *target, bool actsAsHuman);
     void characterAction(Character *character, QueryOptionsCharacterAction action, std::optional<std::variant<Character*, int>> aiParameter, bool actsAsHuman);
     void moveCharacter(Character *character, QueryOptionsCharacterAction direction, int distance);
 

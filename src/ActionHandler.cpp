@@ -11,7 +11,7 @@
 #include "Character.hpp"
 #include "Level.hpp"
 
-bool ActionHandler::attemptAttack(Character *attacker, Character *target) {
+bool ActionHandler::attemptAttack(Character *attacker, Character *target, bool actsAsHuman) {
     // note: the following setup would return true (walls aren't connected diagonally)
     /*
     B . . #
@@ -87,7 +87,7 @@ bool ActionHandler::attemptAttack(Character *attacker, Character *target) {
     }
 
     // if the attacker is an ai, there was already a sleep caused by Game::runGameCycle
-    if (attacker->isHuman()) {
+    if (actsAsHuman) {
         console::waitForMilliseconds();
     }
 
@@ -100,7 +100,7 @@ void ActionHandler::characterAction(Character *character, QueryOptionsCharacterA
         if (actsAsHuman) {
             console::slowPrint("Who do you want to attack?");
             Character *target = console::queryCharacter(characters);
-            (void)attemptAttack(character, target);
+            (void)attemptAttack(character, target, actsAsHuman);
 
         } else {
             if (!aiParameter) {
@@ -112,7 +112,8 @@ void ActionHandler::characterAction(Character *character, QueryOptionsCharacterA
 
             (void)attemptAttack(
                 character,
-                std::get<Character*>(aiParameter.value())
+                std::get<Character*>(aiParameter.value()),
+                actsAsHuman
             );
         }
         break;

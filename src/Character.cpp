@@ -87,6 +87,9 @@ float Character::getHealth() {
 
 void Character::setHealth(float newHealth) {
     attributes.health = newHealth;
+    if (attributes.health > CharacterAttributes::maxHealth) {
+        attributes.health = CharacterAttributes::maxHealth;
+    }
 }
 
 int Character::getXpos() {

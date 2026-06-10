@@ -19,6 +19,7 @@ struct CharacterAttributes {
     static inline const float maxStrength = 20;
     static inline const float minDefense = 1.0f;     // min > max because it's a factor on damage
     static inline const float maxDefense = 0.1f;
+    static inline const float maxHealth = 100.0f;
 
 
     int speed;
