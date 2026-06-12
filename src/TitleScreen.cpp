@@ -33,7 +33,11 @@ void help() {
         << "\n\t- " << TileType::TT_Hole << " is a hole in the ground. They block movement, but don't block attacks."
         << "\n\t- " << TileType::TT_VISUAL_HasItem << " is a regular floor tile with an item on it. Step onto the tile to pick up the item (unless you already have one)."
         << "\n\t- " << TileType::TT_VISUAL_Crowded << " means, that there are two or more players occupying the same space."
-        << "\n\t- Letters represent characters. Lowercase letters are AIs.";
+        << "\n\t- Letters represent characters. Lowercase letters are AIs."
+    << "\nItems: All potions also have stronger variants."
+        << "\n\t- Health Potion: Restores your HP."
+        << "\n\t- Speed Potion: Raises your movement speed."
+        << "\n\t- Turtle Potion: Reduces your movement speed, but raises your defense.";
 
     console::slowPrint(ss.str(), 2);
     console::pressEnterToContinue();
